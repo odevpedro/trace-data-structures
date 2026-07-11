@@ -622,6 +622,52 @@ const unionFindTrace: TraceDefinition = {
   ],
 };
 
+// ── BELLMAN-FORD ────────────────────────────────────────────────────
+
+const bellmanFordTrace: TraceDefinition = {
+  id: "bellman-ford",
+  scene: {
+    nodes: [
+      node("a", "block", 34, 130, 80, 52, { abstract: "A·0", practical: "Partida·0", memory: "A·0" }),
+      node("b", "block", 170, 34, 80, 52, { abstract: "B·∞", practical: "Atalho·∞", memory: "B·∞" }),
+      node("c", "block", 170, 220, 80, 52, { abstract: "C·∞", practical: "Ponto C·∞", memory: "C·∞" }),
+      node("d", "block", 340, 130, 80, 52, { abstract: "D·∞", practical: "Destino·∞", memory: "D·∞" }),
+      node("wAB", "tag", 80, 80, 50, 24, { abstract: "4", practical: "4min", memory: "4" }),
+      node("wAC", "tag", 80, 200, 50, 24, { abstract: "3", practical: "3min", memory: "3" }),
+      node("wBC", "tag", 170, 134, 50, 24, { abstract: "-2", practical: "-2min", memory: "-2" }),
+      node("wBD", "tag", 280, 34, 50, 24, { abstract: "5", practical: "5min", memory: "5" }),
+      node("wCD", "tag", 280, 220, 50, 24, { abstract: "2", practical: "2min", memory: "2" }),
+      node("pq", "tag", 34, 310, 160, 28, { abstract: "{}", practical: "{}", memory: "{}" }),
+    ],
+    edges: [
+      { id: "ab", from: "a", to: "b", directed: true },
+      { id: "ac", from: "a", to: "c", directed: true },
+      { id: "bc", from: "b", to: "c", directed: true },
+      { id: "bd", from: "b", to: "d", directed: true },
+      { id: "cd", from: "c", to: "d", directed: true },
+    ],
+  },
+  code: [
+    "function bellmanFord(graph, start, V) {",
+    "  const dist = Array(V).fill(Infinity);",
+    "  dist[start] = 0;",
+    "  for (let i = 0; i < V - 1; i++) {",
+    "    for (const { u, v, w } of graph.edges) {",
+    "      if (dist[u] + w < dist[v]) dist[v] = dist[u] + w;",
+    "    }",
+    "  }",
+    "  return dist;",
+    "}",
+  ],
+  steps: [
+    step("bf-start", "START", [{ type: "HIGHLIGHT", targets: ["a", "pq"], emphasis: "active" }], "Bellman-Ford: A=0, demais ∞. V=4 nós.", "Bellman-Ford: Partida=0, demais ∞. 4 pontos no trajeto.", "Distância inicial zero para A; todas as outras são infinito.", metrics(0, 0, "O(1)", "Inicialização das distâncias."), 1),
+    step("bf-relax-1", "RELAX", [{ type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["b", "c", "wAB", "wAC"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["ab", "ac"], emphasis: "active" }], "Iteração 1: A→B=4, A→C=3. B=4, C=3.", "Iteração 1: Partida→Atalho=4min, Partida→Ponto C=3min. Atalho=4, Ponto C=3.", "Primeira rodada: relaxa arestas saindo de A.", metrics(2, 2, "O(V·E)", "Duas arestas relaxadas na primeira iteração."), 4),
+    step("bf-relax-2", "RELAX", [{ type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["c", "d", "wBC", "wBD"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["bc", "bd"], emphasis: "active" }], "Iteração 2: B→C=4+(-2)=2 (melhora C: 3→2). B→D=4+5=9.", "Iteração 2: Atalho→Ponto C=4+(-2)=2min (melhor que 3). Atalho→Destino=9min.", "Aresta negativa reduz distância de C de 3 para 2.", metrics(4, 3, "O(V·E)", "Relaxamento com peso negativo descoberto."), 4),
+    step("bf-relax-3", "RELAX", [{ type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["c"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["d", "wCD"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["cd"], emphasis: "active" }], "Iteração 3: C→D=2+2=4 (melhora D: 9→4).", "Iteração 3: Ponto C→Destino=2+2=4min (melhor que 9).", "Caminho final A→C→D = 3+2=5 ou A→B→C→D = 4+(-2)+2=4.", metrics(6, 4, "O(V·E)", "Terceira iteração melhora D."), 4),
+    step("bf-done", "DONE", [{ type: "HIGHLIGHT", targets: ["d"], emphasis: "success" }, { type: "HIGHLIGHT", targets: ["ab", "bc", "cd"], emphasis: "success" }], "D=4. Caminho: A→B→C→D = 4+(-2)+2 = 4.", "Destino=4min. Rota: Partida→Atalho→Ponto C→Destino.", "Bellman-Ford encontrou caminho mais barato usando aresta negativa.", metrics(6, 4, "O(V·E)*", "V-1=3 iterações × E=5 arestas = 15 relaxamentos no pior caso."), 7),
+  ],
+};
+
 // ── LESSON DEFINITIONS ──────────────────────────────────────────────
 
 export const graphLessons: LessonDefinition[] = [
@@ -669,6 +715,7 @@ export const graphLessons: LessonDefinition[] = [
     icon: "⇣",
     difficulty: "intermediate",
     prerequisites: ["stack", "graph"],
+    comparisonId: "bfs-dfs",
     objectives: [
       "Compreender exploração em profundidade",
       "Identificar backtracking",
@@ -766,5 +813,51 @@ export const graphLessons: LessonDefinition[] = [
       success: "Isso: Union-Find responde conectividade entre dois elementos em tempo quase constante.",
     },
     trace: unionFindTrace,
+  },
+  {
+    id: "bellman-ford",
+    title: "Bellman-Ford: caminhos com pesos negativos",
+    shortTitle: "Bellman-Ford",
+    module: "algorithm",
+    icon: "±",
+    difficulty: "advanced",
+    prerequisites: ["dijkstra", "graph"],
+    comparisonId: "bfs-dijkstra",
+    objectives: [
+      "Relaxar arestas com pesos negativos",
+      "Entender V-1 iterações de relaxamento",
+      "Comparar Bellman-Ford com Dijkstra",
+    ],
+    description: "Encontra caminhos mínimos mesmo quando há arestas com peso negativo.",
+    example: { kind: "common-technical-use", label: "Uso técnico comum", note: "Bellman-Ford é usado em roteamento (RIP) e detecção de ciclos negativos. É mais lento que Dijkstra mas aceita pesos negativos." },
+    representations: allRepresentations,
+    explanation: {
+      problem: "Encontrar caminho mínimo em grafo com arestas de peso negativo.",
+      model: "Relaxar todas as arestas V-1 vezes; depois verificar ciclos negativos.",
+      cost: "O(V·E) — mais lento que Dijkstra, mas aceita pesos negativos.",
+      whenToUse: "Quando há arestas com peso negativo ou você precisa detectar ciclos negativos.",
+      alternative: "Dijkstra é mais rápido (O((V+E)log V)) mas não aceita pesos negativos.",
+    },
+    challenge: {
+      question: "Quantas iterações de relaxamento o Bellman-Ford executa?",
+      hint: "Depende do número de vértices.",
+      choices: [
+        { id: "v-minus-1", label: "V - 1", correct: true },
+        { id: "v", label: "V", correct: false },
+        { id: "e", label: "E", correct: false },
+      ],
+      success: "Isso: V-1 iterações garantem que o caminho mínimo de até V-1 arestas seja encontrado.",
+    },
+    limitation: {
+      title: "E se fosse Dijkstra?",
+      goodLabel: "Bellman-Ford",
+      goodValue: "aceita pesos negativos",
+      goodWidth: 48,
+      badLabel: "Dijkstra",
+      badValue: "não aceita pesos negativos",
+      badWidth: 52,
+      text: "Bellman-Ford é mais versátil para pesos negativos, mas custa O(V·E) contra O((V+E)log V) de Dijkstra.",
+    },
+    trace: bellmanFordTrace,
   },
 ];

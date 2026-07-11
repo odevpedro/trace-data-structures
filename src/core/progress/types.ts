@@ -28,6 +28,7 @@ export interface ProgressSnapshot {
   challengeAttempts: Record<string, ChallengeAttempt>;
   flashcards: Record<string, FlashcardProgress>;
   achievementIds: string[];
+  dismissedAchievementIds: string[];
   theme: ThemePreference;
   motionPreference: MotionPreference;
   speed: number;
@@ -45,6 +46,7 @@ export function createEmptyProgress(): ProgressSnapshot {
     challengeAttempts: {},
     flashcards: {},
     achievementIds: [],
+    dismissedAchievementIds: [],
     theme: "light",
     motionPreference: "system",
     speed: 1,

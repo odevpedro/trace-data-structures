@@ -35,6 +35,17 @@ export const comparisons: ComparisonDefinition[] = [
     summaryResult: "good-right",
   },
   {
+    id: "bfs-dfs",
+    title: "BFS × DFS: camadas versus profundidade",
+    lessonIdA: "graph",
+    lessonIdB: "dfs",
+    labelA: "BFS",
+    labelB: "DFS",
+    summaryA: "BFS visita por camadas; encontra caminho mínimo.",
+    summaryB: "DFS aprofunda ramos; não garante caminho mínimo.",
+    summaryResult: "neutral",
+  },
+  {
     id: "bfs-dijkstra",
     title: "Menos paradas × menor custo",
     lessonIdA: "graph",

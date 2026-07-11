@@ -59,7 +59,7 @@ test("flashcards e system design entregam interações reais", async ({ page }) 
   await page.getByRole("button", { name: /Frente do flashcard/ }).click();
   await expect(page.getByText(/O\(n\) no pior caso/)).toBeVisible();
   await page.getByRole("button", { name: "Aprendi" }).click();
-  await expect(page.getByText(/Quando uma busca linear/)).toBeVisible();
+  await expect(page.getByText(/Ao mutar um objeto/)).toBeVisible();
 
   await page.goto("/app/lesson/request-flow");
   for (let index = 0; index < 5; index += 1) {
@@ -88,6 +88,30 @@ test("protótipo preservado continua executável", async ({ page }) => {
   await page.getByRole("button", { name: "Próximo passo" }).click();
   await expect(page.getByText("Passo 1 / 4")).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+test("novas lições carregam sem erro", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  const ids = ["stack", "queue", "hash", "bst", "graph", "dijkstra", "bellman-ford", "btree", "lru", "bloom"];
+  for (const id of ids) {
+    await page.goto(`/app/lesson/${id}`);
+    await expect(page.getByRole("article")).toBeVisible();
+    expect(errors, `Erro ao carregar ${id}`).toEqual([]);
+  }
+});
+
+test("novas comparações carregam sem erro", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  const ids = ["array-queue", "list-hash", "bfs-dijkstra", "bfs-dfs"];
+  for (const id of ids) {
+    await page.goto(`/app/compare/${id}`);
+    await expect(page.locator("main.compare-page")).toBeVisible();
+    expect(errors, `Erro ao carregar comparação ${id}`).toEqual([]);
+  }
 });
 
 test("player permanece utilizável em viewport móvel", async ({ page }) => {

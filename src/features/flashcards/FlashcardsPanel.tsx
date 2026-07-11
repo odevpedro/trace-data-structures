@@ -10,31 +10,56 @@ const ratingLabels: Record<ReviewRating, string> = {
   good: "Aprendi",
 };
 
+function dueCards(progress: Record<string, { dueAt: string }>) {
+  const now = Date.now();
+  return flashcards.filter((card) => {
+    const p = progress[card.id];
+    return !p || new Date(p.dueAt).getTime() <= now;
+  });
+}
+
 export function FlashcardsPanel() {
   const progress = useTraceStore((state) => state.flashcards);
   const reviewFlashcard = useTraceStore((state) => state.reviewFlashcard);
   const reducedMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const card = flashcards[index];
+
+  const due = useMemo(() => dueCards(progress), [progress]);
+  const card = due[index];
   const reviewed = useMemo(
     () => flashcards.filter((item) => progress[item.id]?.reviews).length,
     [progress],
   );
 
+  if (due.length === 0) {
+    return (
+      <section className="review-shell" aria-labelledby="review-title">
+        <header className="page-hero">
+          <div>
+            <span className="eyebrow">Revisão espaçada · em dia</span>
+            <h1 id="review-title">Nenhum card vencido.</h1>
+            <p>Você revisou todos os cards. Volte mais tarde para a próxima sessão.</p>
+          </div>
+          <span className="progress-number">{reviewed} / {flashcards.length} revisados</span>
+        </header>
+      </section>
+    );
+  }
+
   const rate = (rating: ReviewRating) => {
     reviewFlashcard(card.id, rating);
     setFlipped(false);
-    setIndex((current) => (current + 1) % flashcards.length);
+    setIndex((current) => (current + 1) % due.length);
   };
 
   return (
     <section className="review-shell" aria-labelledby="review-title">
       <header className="page-hero">
         <div>
-          <span className="eyebrow">Revisão espaçada · sessão curta</span>
+          <span className="eyebrow">Revisão espaçada · {due.length} vencidos</span>
           <h1 id="review-title">Consolide o que acabou de observar.</h1>
-          <p>Três cards derivados das lições. Sua avaliação define quando cada um volta.</p>
+          <p>{due.length} card{due.length !== 1 ? "s" : ""} pronto{due.length !== 1 ? "s" : ""} para revisar agora.</p>
         </div>
         <span className="progress-number">{reviewed} / {flashcards.length} revisados</span>
       </header>
@@ -55,8 +80,8 @@ export function FlashcardsPanel() {
           <span className="flashcard__hint">{flipped ? "Avalie sua lembrança" : "Clique para revelar"}</span>
         </button>
 
-        <div className="flashcard-dots" aria-label={`Card ${index + 1} de ${flashcards.length}`}>
-          {flashcards.map((item, itemIndex) => (
+        <div className="flashcard-dots" aria-label={`Card ${index + 1} de ${due.length}`}>
+          {due.map((item, itemIndex) => (
             <button
               type="button"
               aria-label={`Abrir card ${itemIndex + 1}`}

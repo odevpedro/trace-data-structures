@@ -14,6 +14,6 @@ describe("FlashcardsPanel", () => {
     await user.click(screen.getByRole("button", { name: "Aprendi" }));
 
     expect(useTraceStore.getState().flashcards["array-insert-cost"].box).toBe(1);
-    expect(screen.getByText(/Quando uma busca linear/)).toBeInTheDocument();
+    expect(screen.getByText(/Ao mutar um objeto/)).toBeInTheDocument();
   });
 });

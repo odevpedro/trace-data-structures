@@ -2,7 +2,9 @@ import { useTraceStore } from "../../store/useTraceStore";
 
 export function AchievementNotice() {
   const unlocked = useTraceStore((state) => state.achievementIds.includes("first-trace"));
-  if (!unlocked) return null;
+  const dismissed = useTraceStore((state) => state.dismissedAchievementIds.includes("first-trace"));
+  const dismiss = useTraceStore((state) => state.dismissAchievement);
+  if (!unlocked || dismissed) return null;
 
   return (
     <aside className="achievement-notice" aria-label="Conquista desbloqueada">
@@ -12,6 +14,14 @@ export function AchievementNotice() {
         <strong>Primeiro Trace</strong>
         <p>Você concluiu um desafio explicando a regra central, não apenas clicando até o fim.</p>
       </div>
+      <button
+        className="achievement-dismiss"
+        type="button"
+        aria-label="Dispensar conquista"
+        onClick={() => dismiss("first-trace")}
+      >
+        ✕
+      </button>
     </aside>
   );
 }

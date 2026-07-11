@@ -38,6 +38,7 @@ interface TraceStore extends ProgressSnapshot {
   reviewFlashcard: (flashcardId: string, rating: ReviewRating, now?: Date) => void;
   setTheme: (theme: ThemePreference) => void;
   setMotionPreference: (preference: MotionPreference) => void;
+  dismissAchievement: (id: string) => void;
   reset: () => void;
 }
 
@@ -157,6 +158,11 @@ export const useTraceStore = create<TraceStore>((set, get) => ({
   },
   setTheme: (theme) => set({ theme }),
   setMotionPreference: (motionPreference) => set({ motionPreference }),
+  dismissAchievement: (id) => set((state) => ({
+    dismissedAchievementIds: state.dismissedAchievementIds.includes(id)
+      ? state.dismissedAchievementIds
+      : [...state.dismissedAchievementIds, id],
+  })),
   reset: () => set(initialStoreState()),
 }));
 
@@ -172,6 +178,7 @@ export function selectProgressSnapshot(state: TraceStore): ProgressSnapshot {
     challengeAttempts: state.challengeAttempts,
     flashcards: state.flashcards,
     achievementIds: state.achievementIds,
+    dismissedAchievementIds: state.dismissedAchievementIds,
     theme: state.theme,
     motionPreference: state.motionPreference,
     speed: state.speed,

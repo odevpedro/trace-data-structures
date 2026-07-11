@@ -38,6 +38,7 @@ export function PersistenceBridge({ repository }: PersistenceBridgeProps) {
             challengeAttempts: {},
             flashcards: {},
             achievementIds: [],
+            dismissedAchievementIds: [],
             theme: "light",
             motionPreference: "system",
             speed: 1,

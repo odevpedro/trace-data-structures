@@ -2,13 +2,7 @@
 
 ## Pendentes
 
-- Adicionar arestas com pesos visíveis no trace do Dijkstra (já existem nós `wAB` etc., verificar renderização)
-- Criar lição de Bellman-Ford (pesos negativos)
-- Criar comparação BFS × DFS
-- Implementar P0: teste de integridade do protótipo (INT-001)
-- Implementar P2: fila de revisão por vencimento (REV-002)
-- Implementar P2: ciclo de conquista com dispensa (ACH-003)
-- Adicionar testes E2E para as novas lições (P1)
+- _Nenhum item pendente no momento_
 
 ## Em andamento
 
@@ -26,3 +20,12 @@
 - [x] 2026-07-11 — Adicionar 3 comparações em `comparisons.ts` (array-queue, list-hash, bfs-dijkstra)
 - [x] 2026-07-11 — Atualizar imports de 4 páginas para `../content` (agregador)
 - [x] 2026-07-11 — Registrar paridade no `PARITY_MATRIX.md` para todas as 18 lições e 3 comparações
+- [x] 2026-07-11 — INT-001: Teste de integridade do protótipo (compare byte a byte as duas cópias)
+- [x] 2026-07-11 — ACH-003: Dispensar aviso de conquista (botão ✕ no AchievementNotice)
+- [x] 2026-07-11 — Comparação BFS × DFS (comparisonId e definição)
+- [x] 2026-07-11 — REV-002: Fila de revisão por vencimento (dueCards filter no FlashcardsPanel)
+- [x] 2026-07-11 — Lição Bellman-Ford (pesos negativos) em graphs.ts
+- [x] 2026-07-11 — Testes E2E para novas lições e comparações (2 novos cenários)
+- [x] 2026-07-11 — Atualizar textos da LandingPage e LearningPathPage (contagem dinâmica)
+- [x] 2026-07-11 — Adicionar CSS `data-kind="block"`
+- [x] 2026-07-11 — Atualizar CURRENT_STATE.md
