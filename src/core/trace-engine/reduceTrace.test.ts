@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lessonById } from "../../content/lessons";
 import { reduceTrace } from "./reduceTrace";
+import type { TraceDefinition } from "./types";
 
 describe("reduceTrace", () => {
   it("reproduz a inserção do array acumulando os eventos da timeline", () => {
@@ -31,5 +32,38 @@ describe("reduceTrace", () => {
 
     expect(scene.nodes.allowed.emphasis).toBe("success");
     expect(scene.nodes.blocked.emphasis).toBe("muted");
+  });
+
+  it("volta ao passo zero redefine o estado inicial", () => {
+    const trace = lessonById.array.trace;
+    const scene = reduceTrace(trace, 0);
+
+    expect(scene.nodes.four.position).toEqual({ x: 45, y: 176 });
+    expect(scene.nodes.four.visible).toBe(true);
+    expect(scene.nodes.four.emphasis).toBe("idle");
+    expect(scene.nodes.six.emphasis).toBe("active");
+    expect(scene.nodes.sixteen.position).toEqual({ x: 381, y: 176 });
+  });
+
+  it("navega para frente e depois volta mantém coerência", () => {
+    const trace = lessonById.array.trace;
+    const atStep3 = reduceTrace(trace, 3);
+    const atStep1 = reduceTrace(trace, 1);
+
+    expect(atStep1.nodes.sixteen.position).toEqual({ x: 493, y: 176 });
+    expect(atStep1.nodes.twelve.position).toEqual({ x: 269, y: 176 });
+    expect(atStep3.nodes.twelve.position).toEqual({ x: 381, y: 176 });
+  });
+
+  it("lição desconhecida não quebra", () => {
+    const trace: TraceDefinition = {
+      id: "empty",
+      scene: { nodes: [], edges: [] },
+      steps: [],
+    };
+    const scene = reduceTrace(trace, 0);
+
+    expect(scene.nodes).toEqual({});
+    expect(scene.edges).toEqual({});
   });
 });

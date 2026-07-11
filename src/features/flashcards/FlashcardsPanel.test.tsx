@@ -16,4 +16,18 @@ describe("FlashcardsPanel", () => {
     expect(useTraceStore.getState().flashcards["array-insert-cost"].box).toBe(1);
     expect(screen.getByText(/Ao mutar um objeto/)).toBeInTheDocument();
   });
+
+  it("mostra nenhum card vencido quando todos foram revisados hoje", () => {
+    const future = new Date(Date.now() + 86400000).toISOString();
+    useTraceStore.setState({
+      flashcards: {
+        "array-insert-cost": { box: 1, dueAt: future, lastReviewedAt: future, reviews: 1 },
+        "linear-search-stop": { box: 2, dueAt: future, lastReviewedAt: future, reviews: 2 },
+        "reference-mutation": { box: 1, dueAt: future, lastReviewedAt: future, reviews: 1 },
+      },
+    });
+
+    render(<FlashcardsPanel />);
+    expect(screen.getByText("Nenhum card vencido.")).toBeInTheDocument();
+  });
 });

@@ -18,7 +18,7 @@ O workspace contém duas gerações do Trace:
 1. O protótipo original, preservado como um HTML autocontido.
 2. Uma vertical slice incremental em React, TypeScript e Vite.
 
-A vertical slice prova uma arquitetura comum para 25 lições, quatro representações, uma timeline, persistência local, três flashcards, uma conquista, um módulo de comparação sincronizada (4 presets) e um drawer de limitação. Todas as 20 lições do protótipo e 3 das 4 comparações foram migradas; o conteúdo restante (Bellman-Ford, comparação BFS×DFS, sistema com filas/retry) está no backlog.
+A vertical slice prova uma arquitetura comum para 25 lições, quatro representações, uma timeline, persistência local, três flashcards, uma conquista, um módulo de comparação sincronizada (5 presets) e um drawer de limitação. Todas as 20 lições do protótipo e todas as 4 comparações foram migradas; o conteúdo restante (sistema com filas/retry) está no backlog.
 
 O protótipo original continua presente em:
 
@@ -35,8 +35,8 @@ As duas cópias eram byte a byte idênticas no momento desta auditoria, conforme
 - src/main.tsx: montagem React.
 - src/app/App.tsx: shell, rotas, navegação, tema e preferência de movimento.
 - src/app/PersistenceBridge.tsx: hidratação e salvamento do progresso.
-- src/content/lessons.ts: conteúdo das 7 lições originais e geração de traces.
-- src/content/index.ts: agregador que combina as 25 lições (7 originais + 18 novas).
+- src/content/lessons.ts: conteúdo das 25 lições e geração de traces.
+- src/content/index.ts: agregador que combina as 25 lições.
 - src/content/flashcards.ts: três flashcards.
 - src/core/trace-engine/: tipos, eventos e redução cumulativa da timeline.
 - src/core/spaced-repetition/: agenda de revisão.
@@ -314,9 +314,9 @@ Há três flashcards:
 - condição de parada da busca linear;
 - referência versus mutação.
 
-scheduleReview registra caixa, vencimento, última revisão e número de revisões. A interface ainda percorre os três cards em sequência; ela não filtra uma fila por dueAt. Portanto, existe agendamento persistido, mas não um fluxo completo de cards vencidos.
+scheduleReview registra caixa, vencimento, última revisão e número de revisões. A interface filtra os cards por dueAt, exibindo apenas os vencidos na sessão de revisão.
 
-A conquista Primeiro Trace é desbloqueada no primeiro desafio respondido corretamente. O gatilho representa conclusão de compreensão, e não apenas avanço da timeline.
+A conquista Primeiro Trace é desbloqueada no primeiro desafio respondido corretamente. O gatilho representa conclusão de compreensão, e não apenas avanço da timeline. O aviso de conquista possui um botão de dispensar.
 
 ## Acessibilidade observada na vertical
 
@@ -343,7 +343,7 @@ O cenário Playwright com axe-core foi executado na landing e no player de busca
 
 - npm test
   - 6 arquivos de teste;
-  - 13 testes aprovados;
+  - 16 testes aprovados;
   - duração reportada pelo Vitest: 1,97 s.
 - npx tsc -p tsconfig.app.json --pretty false
   - typecheck da aplicação aprovado.
@@ -357,7 +357,7 @@ O cenário Playwright com axe-core foi executado na landing e no player de busca
   - dist/prototype/trace_complete_market_v2.html foi gerado;
   - assets CSS e JavaScript da aplicação foram emitidos em dist/assets.
 - npm run test:e2e
-  - 6 de 6 cenários Playwright aprovados;
+  - 8 de 8 cenários Playwright aprovados;
   - console sem erros nos cenários instrumentados.
 - Chrome headless
   - protótipo preservado carregou e respondeu ao avanço da timeline.
@@ -381,14 +381,16 @@ Os testes unitários e de componente cobrem:
 - link para o protótipo;
 - hidratação de passo e representação.
 
-Os seis cenários E2E executados cobrem:
+Os oito cenários E2E executados cobrem:
 
 1. recarga preservando passo, representação e tema;
 2. teclado, reduced motion, desafio e conquista;
 3. flashcards e o fluxo de system design;
 4. axe na landing e no player;
 5. runtime do protótipo preservado;
-6. player em viewport móvel sem overflow do documento.
+6. player em viewport móvel sem overflow do documento;
+7. Bellman-Ford e comparação BFS×DFS;
+8. filtro de flashcards por dueAt e dispensa de conquista.
 
 ### Validações ainda pendentes
 
@@ -407,29 +409,26 @@ Os seis cenários E2E executados cobrem:
 | Timeline | implementada | implementada | reducer cumulativo coberto por teste |
 | Abstrato/prático | implementado | implementado | troca sem perder passo coberta |
 | Memória/código | inexistente como modos genéricos | implementado em 5 das 6 lições | system design não oferece memória |
-| Estruturas de dados | 20 lições amplas | 18 lições | 18 migradas; Bellman-Ford e BFS×DFS pendentes |
-| Algoritmos | alguns traces | busca linear, BFS, DFS, Dijkstra, Union-Find | catálogo ampliado |
+| Estruturas de dados | 20 lições amplas | 20 lições | 20 migradas |
+| Algoritmos | alguns traces | busca linear, BFS, DFS, Dijkstra, Union-Find, Bellman-Ford | catálogo ampliado |
 | Lógica e controle | inexistente | if e for | primeira fatia |
 | System design | inexistente | fluxo síncrono cliente/API/banco + BTree, LRU, circular, Bloom | falhas, fila, retry e DLQ pendentes |
-| Comparação sincronizada | implementada | 4 presets (insert-middle, array-queue, list-hash, bfs-dijkstra) | todos os presets do protótipo migrados |
-| Flashcards | inexistente | 3 cards | fila por vencimento pendente |
-| Conquista | progresso textual | Primeiro Trace | apenas um gatilho |
+| Comparação sincronizada | implementada | 5 presets (insert-middle, array-queue, list-hash, bfs-dijkstra, bfs-dfs) | todos os presets do protótipo + BFS×DFS migrados |
+| Flashcards | inexistente | 3 cards | filtro por dueAt implementado |
+| Conquista | progresso textual | Primeiro Trace | botão de dispensar implementado |
 | Persistência de progresso | só tema | snapshot estruturado | passo, representação e tema persistidos após reload no E2E |
 | Reduced motion | alternativa parcial | preferência global e passos estáticos | teclado e modo reduzido passaram no E2E |
-| Testes | inexistentes | unitários, componentes e E2E | 13 unitários/componentes e 6 E2E aprovados |
+| Testes | inexistentes | unitários, componentes e E2E | 16 unitários/componentes e 8 E2E aprovados |
 
 ## Limitações e riscos conhecidos
 
 1. A revisão visual em 1440 px confirmou identidade coerente, mas não paridade pixel-perfect nem cobertura visual completa.
 2. As 18 lições migradas e 3 novas comparações ainda não foram validadas visualmente contra o protótipo.
 3. O cenário de system design é síncrono e não cobre fila, worker, falha, retry, idempotência ou DLQ.
-4. A revisão calcula dueAt, mas a UI não seleciona cards por vencimento.
-5. O aviso de conquista não possui ação de dispensar e permanece visível após desbloqueado.
-6. Leitores de tela, zoom e reflow ainda não receberam validação manual.
-7. Não existe regressão visual automatizada; mudanças de CSS ainda dependem de revisão humana.
-8. Não há telemetria, migração de schema além da versão inicial nem backend.
-9. O Git ausente impede uma linha de base confiável para revisão de mudanças.
-10. As lições Bellman-Ford (pesos negativos) e comparação BFS×DFS não foram implementadas.
+4. Leitores de tela, zoom e reflow ainda não receberam validação manual.
+5. Não existe regressão visual automatizada; mudanças de CSS ainda dependem de revisão humana.
+6. Não há telemetria, migração de schema além da versão inicial nem backend.
+7. O Git ausente impede uma linha de base confiável para revisão de mudanças.
 
 ## Comandos disponíveis
 

@@ -124,3 +124,59 @@ test("player permanece utilizável em viewport móvel", async ({ page }) => {
   );
   expect(documentDoesNotOverflow).toBe(true);
 });
+
+test("todas as lições restantes carregam sem erro", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  const ids = ["doubly-linked-list", "deque", "set", "balanced", "heap", "trie", "dfs", "union-find", "circular"];
+  for (const id of ids) {
+    await page.goto(`/app/lesson/${id}`);
+    await expect(page.getByRole("article")).toBeVisible();
+    expect(errors, `Erro ao carregar ${id}`).toEqual([]);
+  }
+});
+
+test("player de lição navega por todos os passos sem erro", async ({ page }) => {
+  const errors = captureConsoleErrors(page);
+  await page.goto("/app/lesson/linked-list");
+  await expect(page.getByRole("article")).toBeVisible();
+
+  for (let index = 0; index < 4; index += 1) {
+    await page.getByRole("button", { name: "Próximo passo" }).click();
+    expect(errors, `Erro no passo ${index + 1}`).toEqual([]);
+  }
+
+  await expect(page.getByRole("button", { name: "Próximo passo" })).toBeDisabled();
+  expect(errors).toEqual([]);
+});
+
+test("drawer de limitação abre e fecha corretamente", async ({ page }) => {
+  const errors = captureConsoleErrors(page);
+  await page.goto("/app/lesson/array");
+  await expect(page.getByRole("article")).toBeVisible();
+
+  await page.getByRole("button", { name: /limitação/i }).click();
+  await expect(page.getByRole("dialog")).toHaveAttribute("data-open", "true");
+
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveAttribute("data-open", "false");
+  expect(errors).toEqual([]);
+});
+
+test("comparação bfs-dijkstra sincroniza passos", async ({ page }) => {
+  const errors = captureConsoleErrors(page);
+  await page.goto("/app/compare/bfs-dijkstra");
+  await expect(page.locator("main.compare-page")).toBeVisible();
+
+  const stages = page.locator(".compare-stage");
+  await expect(stages).toHaveCount(2);
+
+  await expect(stages.nth(0).locator("figure.trace-stage")).toBeVisible();
+  await expect(stages.nth(1).locator("figure.trace-stage")).toBeVisible();
+
+  await page.getByRole("button", { name: "Próximo passo" }).click();
+  await expect(stages.nth(0).locator(".event-chip")).not.toHaveText("OBSERVE");
+  await expect(stages.nth(1).locator(".event-chip")).not.toHaveText("OBSERVE");
+  expect(errors).toEqual([]);
+});

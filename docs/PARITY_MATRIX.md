@@ -17,9 +17,9 @@ Uma linha Parcial não é considerada migrada. Testes de uma parte não promovem
 
 Evidência automatizada deste checkpoint:
 
-- npm test: 6 arquivos e 13 testes passaram;
+- npm test: 6 arquivos e 16 testes passaram;
 - npm run build passou e incluiu aplicação e protótipo;
-- npm run test:e2e: 6 de 6 cenários passaram;
+- npm run test:e2e: 8 de 8 cenários passaram;
 - persistência/reload/tema, teclado/reduced motion/conquista, flashcards/system design, axe, protótipo executável e viewport móvel sem overflow foram exercitados;
 - os fluxos instrumentados não registraram erros de console;
 - screenshots desktop de landing, player e protótipo mostraram linguagem visual coerente.
@@ -54,7 +54,7 @@ Continuam pendentes paridade pixel-perfect, regressão visual automatizada, audi
 | Métricas | Operações, tocados e complexidade | Mesmas métricas + contexto | Parcial | Sim na vertical | Conteúdo inspecionado; teste dedicado falta | Em migração |
 | Quiz por lição e modo | Sim em 20 lições | Um desafio por lição | Parcial | Parcial | ChallengePanel e conquista testados | Em migração |
 | Drawer Ver limitação | Sim | Sim | Parcial | Sim | DrawerComponent com focus trap, escape e barras de comparação | Em migração |
-| Comparações sincronizadas | Quatro presets | Quatro presets (insert-middle, array-queue, list-hash, bfs-dijkstra) | Parcial | Parcial | ComparePage com TraceCanvas duplo e timeline compartilhada | Em migração |
+| Comparações sincronizadas | Cinco presets | Cinco presets (insert-middle, array-queue, list-hash, bfs-dijkstra, bfs-dfs) | Parcial | Parcial | ComparePage com TraceCanvas duplo e timeline compartilhada | Em migração |
 | Progresso de lições | Set em memória por visita/acerto | Início, passo, tentativa e conclusão persistidos | Nova visualmente | Superior para a vertical | Store, repository e reload E2E aprovados | Extensão parcial |
 | Tema persistido | localStorage | IndexedDB/fallback no snapshot | Parcial | Sim | Persistência e reload/tema aprovados em E2E | Em migração |
 | Reduced motion | Comic strip via media query | Preferência sistema/reduzido/completo + lista textual | Parcial | Sim na vertical | E2E aprovado; inspeção manual detalhada pendente | Em migração |
@@ -88,6 +88,7 @@ Continuam pendentes paridade pixel-perfect, regressão visual automatizada, audi
 | LRU Cache | Sim | lru | Parcial | Parcial | Hit/promote/evict em cinco passos | Em migração |
 | Buffer circular | Sim | circular | Parcial | Parcial | Wrap-around com sobrescrita em cinco passos | Em migração |
 | Bloom Filter | Sim | bloom | Parcial | Parcial | Falso positivo com múltiplos hashes em seis passos | Em migração |
+| Bellman-Ford | Sim | bellman-ford | Parcial | Parcial | Relaxamento com detecção de ciclo negativo em seis passos | Em migração |
 
 Por que todas as lições continuam Parcial:
 
@@ -105,6 +106,7 @@ Por que todas as lições continuam Parcial:
 | Remoção no início: Array × Fila | Sim | array-queue | Sim | Parcial | ComparePage com timeline compartilhada | Em migração |
 | Busca por chave: Lista × Hash | Sim | list-hash | Sim | Parcial | ComparePage com timeline compartilhada | Em migração |
 | Menos paradas × menor custo: Grafo/BFS × Dijkstra | Sim | bfs-dijkstra | Sim | Parcial | ComparePage com timeline compartilhada | Em migração |
+| Estratégia de busca: BFS × DFS | Sim | bfs-dfs | Sim | Parcial | ComparePage com timeline compartilhada | Em migração |
 
 ## 5. Expansões da vertical
 
@@ -153,7 +155,7 @@ Estas linhas comprovam a primeira entrega, mas não contam como paridade das 19 
 | Storage | save/load IndexedDB | Passou | fallback, corrupção, quota e migração |
 | Componentes | player, input, teclado, conquista, flashcards, App | Passou | play automático, velocidade, tema e reduced motion unitário |
 | Build | aplicação e protótipo | Passou | Reexecutar a cada fatia |
-| E2E | reload/tema, reduced motion, desafio, cards, system design, axe, protótipo e mobile | 6 de 6 passaram; console instrumentado sem erros | Ampliar junto ao catálogo |
+| E2E | reload/tema, reduced motion, desafio, cards, system design, axe, protótipo e mobile | 8 de 8 passaram; console instrumentado sem erros | Ampliar junto ao catálogo |
 | Visual | Comparação manual por screenshots desktop | Linguagem visual coerente | Pixel-perfect, temas/estados e regressão automatizada |
 | Manual a11y | Nenhum relatório atual | Não verificado | Leitor de tela, zoom, contraste, touch e foco |
 
