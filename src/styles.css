@@ -1954,6 +1954,10 @@ html[data-motion="reduced"] *::after {
 
 .path-search {
   padding: 0 24px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
 .path-search input {
   width: 100%;
@@ -1968,6 +1972,26 @@ html[data-motion="reduced"] *::after {
   transition: border-color .2s ease;
 }
 .path-search input:focus {
+  border-color: var(--text);
+}
+.path-modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.path-modules button {
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: .8125rem;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.path-modules button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
   border-color: var(--text);
 }
 

@@ -3,19 +3,29 @@ import { Link } from "react-router-dom";
 import { learningPath, moduleLabels } from "../content";
 import { useTraceStore } from "../store/useTraceStore";
 
+const moduleKeys = ["data-structure", "algorithm", "logic", "memory", "system-design"] as const;
+
 export function LearningPathPage() {
   const started = useTraceStore((state) => state.startedLessonIds);
   const completed = useTraceStore((state) => state.completedLessonIds);
   const [search, setSearch] = useState("");
+  const [modules, setModules] = useState<Set<string>>(new Set());
+
+  const toggleModule = (key: string) => {
+    setModules((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
   const query = search.toLowerCase();
-  const filtered = query
-    ? learningPath.filter(
-        (l) =>
-          l.title.toLowerCase().includes(query) ||
-          l.description.toLowerCase().includes(query),
-      )
-    : learningPath;
+  const filtered = learningPath.filter((l) => {
+    if (modules.size > 0 && !modules.has(l.module)) return false;
+    if (query && !l.title.toLowerCase().includes(query) && !l.description.toLowerCase().includes(query)) return false;
+    return true;
+  });
 
   return (
     <main className="path-page">
@@ -32,6 +42,18 @@ export function LearningPathPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <div className="path-modules" role="group" aria-label="Filtrar por módulo">
+          {moduleKeys.map((key) => (
+            <button
+              type="button"
+              aria-pressed={modules.has(key)}
+              key={key}
+              onClick={() => toggleModule(key)}
+            >
+              {moduleLabels[key]}
+            </button>
+          ))}
+        </div>
       </div>
       <ol className="path-list">
         {filtered.map((lesson) => {
