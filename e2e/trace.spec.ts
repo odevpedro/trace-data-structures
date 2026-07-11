@@ -48,7 +48,7 @@ test("teclado, movimento reduzido, desafio e conquista funcionam juntos", async 
   await page.keyboard.press("ArrowRight");
   await expect(page.getByLabel("Passo 1 de 4")).toBeVisible();
 
-  await page.getByRole("button", { name: "Somente o bloco else" }).click();
+  await page.getByRole("button", { name: "Bloco else (bloqueado)" }).click();
   await expect(page.getByLabel("Conquista desbloqueada")).toContainText("Primeiro Trace");
   expect(errors).toEqual([]);
 });

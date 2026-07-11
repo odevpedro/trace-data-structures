@@ -147,6 +147,8 @@ export interface ChallengeDefinition {
   hint: string;
   choices: Choice[];
   success: string;
+  /** Optional representation-specific challenges that override the default */
+  byRepresentation?: Partial<Record<Representation, ChallengeDefinition>>;
 }
 
 export interface LessonControl {

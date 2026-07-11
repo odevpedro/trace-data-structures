@@ -28,6 +28,7 @@ interface LessonPlayerProps {
 
 export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
   const hydrated = useTraceStore((state) => state.hydrated);
   const player = useTraceStore((state) => state.player);
   const speed = useTraceStore((state) => state.speed);
@@ -111,7 +112,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   }
 
   return (
-    <article className="lesson-player" tabIndex={0} onKeyDown={handleKeyboard}>
+    <article className="lesson-player" tabIndex={0} onKeyDown={handleKeyboard} data-focus={focusMode && player.status === "playing"}>
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {lesson.title}. Passo {stepIndex} de {maxStep}. {currentStep.description}
       </div>
@@ -207,6 +208,15 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
           onSpeedChange={setSpeed}
         />
 
+        <button
+          type="button"
+          className="text-button"
+          aria-pressed={focusMode}
+          onClick={() => setFocusMode((v) => !v)}
+        >
+          {focusMode ? "Sair do modo foco" : "Modo foco →"}
+        </button>
+
         <div className="metrics-grid">
           <div><span>Operações</span><strong>{currentStep.metrics.operations}</strong></div>
           <div><span>Elementos tocados</span><strong>{currentStep.metrics.touched}</strong></div>
@@ -237,7 +247,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
         </section>
       </div>
 
-      <ChallengePanel lessonId={lesson.id} challenge={lesson.challenge} />
+      <ChallengePanel lessonId={lesson.id} challenge={lesson.challenge} representation={representation} />
       {lesson.limitation ? (
         <Drawer
           isOpen={drawerOpen}

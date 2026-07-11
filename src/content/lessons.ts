@@ -791,7 +791,36 @@ export const lessons: LessonDefinition[] = [
     example: { kind: "possible-modeling", label: "Modelagem possível", note: "Uma lista pequena sem índice auxiliar pode ser pesquisada sequencialmente; produtos reais usam estratégias variadas." },
     representations: allRepresentations,
     explanation: { problem: "Encontrar 12 sem conhecer seu índice.", model: "Comparar o alvo com um item por vez, da esquerda para a direita.", cost: "O(1) no melhor caso e O(n) no pior caso; aqui foram três comparações.", whenToUse: "Coleções pequenas, não ordenadas ou buscas ocasionais.", alternative: "Busca binária exige ordenação; hash exige um índice auxiliar." },
-    challenge: { question: "Quando a busca linear atinge o pior caso?", hint: "Considere o alvo ausente ou na última posição.", choices: [{ id: "last", label: "Quando toca todos os itens", correct: true }, { id: "first", label: "Quando acha o primeiro item", correct: false }, { id: "sorted", label: "Sempre que a lista está ordenada", correct: false }], success: "Certo: alvo ausente ou no fim exige até n comparações." },
+    challenge: {
+      question: "Quando a busca linear atinge o pior caso?",
+      hint: "Considere o alvo ausente ou na última posição.",
+      choices: [{ id: "last", label: "Quando toca todos os itens", correct: true }, { id: "first", label: "Quando acha o primeiro item", correct: false }, { id: "sorted", label: "Sempre que a lista está ordenada", correct: false }],
+      success: "Certo: alvo ausente ou no fim exige até n comparações.",
+      byRepresentation: {
+        abstract: {
+          question: "Quantas comparações a busca linear faz no pior caso?",
+          hint: "Conte os elementos do array.",
+          choices: [
+            { id: "n-1", label: "n − 1", correct: false },
+            { id: "n", label: "n", correct: true },
+            { id: "log-n", label: "log n", correct: false },
+            { id: "1", label: "1 (sempre o primeiro)", correct: false },
+          ],
+          success: "Exato. No pior caso a busca linear percorre todos os n elementos.",
+        },
+        practical: {
+          question: "Em qual situação a busca linear encontra o alvo mais rápido?",
+          hint: "Pense na posição do alvo na lista.",
+          choices: [
+            { id: "meio", label: "Quando está no meio", correct: false },
+            { id: "inicio", label: "Quando está no início", correct: true },
+            { id: "fim", label: "Quando está no fim", correct: false },
+            { id: "nunca", label: "Ela nunca encontra rápido", correct: false },
+          ],
+          success: "Correto! Se o alvo está na primeira posição, a busca termina em uma única comparação.",
+        },
+      },
+    },
     trace: linearSearchTrace,
   },
   {
@@ -809,7 +838,36 @@ export const lessons: LessonDefinition[] = [
     explanation: { problem: "Escolher entre permitir e bloquear a partir de uma regra.", model: "Avaliar idade >= 18 e executar apenas o ramo correspondente.", cost: "Comparação e branch são O(1) neste exemplo.", whenToUse: "Quando a execução depende de uma condição booleana.", alternative: "Tabelas de decisão ou polimorfismo podem organizar regras maiores." },
     controls: [{ id: "age", label: "Idade", type: "number", defaultValue: 16, min: 0, max: 120 }],
     prediction: { prompt: "Antes de avançar: qual será o ramo?", options: [{ id: "allowed", label: "Permitido" }, { id: "blocked", label: "Bloqueado" }], evaluate: (inputs) => (inputs.age >= 18 ? "allowed" : "blocked") },
-    challenge: { question: "O que o if executa quando a condição é false?", hint: "Observe o cursor e o ramo esmaecido.", choices: [{ id: "else", label: "Somente o bloco else", correct: true }, { id: "both", label: "Os dois blocos", correct: false }, { id: "again", label: "A condição novamente", correct: false }], success: "Isso: um if/else escolhe exatamente um dos dois caminhos." },
+    challenge: {
+      question: "O que o if executa quando a condição é false?",
+      hint: "Observe o cursor e o ramo esmaecido.",
+      choices: [{ id: "else", label: "Somente o bloco else", correct: true }, { id: "both", label: "Os dois blocos", correct: false }, { id: "again", label: "A condição novamente", correct: false }],
+      success: "Isso: um if/else escolhe exatamente um dos dois caminhos.",
+      byRepresentation: {
+        abstract: {
+          question: "Com idade 16, o programa entra em qual bloco?",
+          hint: "Avalie a condição age ≥ 18 com o valor atual.",
+          choices: [
+            { id: "else", label: "Bloco else (bloqueado)", correct: true },
+            { id: "then", label: "Bloco then (permitido)", correct: false },
+            { id: "ambos", label: "Executa ambos os blocos", correct: false },
+            { id: "nenhum", label: "Nenhum bloco executa", correct: false },
+          ],
+          success: "Sim! 16 < 18, então o else é executado.",
+        },
+        practical: {
+          question: "O que aparece na tela se alguém de 16 anos usar o sistema?",
+          hint: "Teste com a entrada 16.",
+          choices: [
+            { id: "liberado", label: "Acesso liberado", correct: false },
+            { id: "bloqueado", label: "Acesso bloqueado", correct: true },
+            { id: "erro", label: "Uma mensagem de erro", correct: false },
+            { id: "nada", label: "Nada, a tela fica em branco", correct: false },
+          ],
+          success: "Isso mesmo! 16 < 18, então o sistema bloqueia o acesso.",
+        },
+      },
+    },
     trace: createIfTrace({ age: 16 }),
     createTrace: createIfTrace,
   },
@@ -828,7 +886,36 @@ export const lessons: LessonDefinition[] = [
     explanation: { problem: "Acumular os inteiros de 0 até n-1.", model: "Inicializar i, testar i < n, executar o corpo e incrementar.", cost: "Tempo O(n) e espaço auxiliar O(1).", whenToUse: "Quando o número ou intervalo de repetições é conhecido.", alternative: "while expressa melhor repetições governadas por um evento ou condição aberta." },
     controls: [{ id: "limit", label: "Número de repetições", type: "number", defaultValue: 3, min: 1, max: 5 }],
     prediction: { prompt: "Qual expressão descreve a soma final?", options: [{ id: "formula", label: "n × (n − 1) / 2" }, { id: "linear", label: "n" }, { id: "square", label: "n²" }], evaluate: () => "formula" },
-    challenge: { question: "Por que o corpo não executa quando i é igual a n?", hint: "A comparação usa <, não <=.", choices: [{ id: "false", label: "Porque i < n é false", correct: true }, { id: "return", label: "Porque return roda primeiro", correct: false }, { id: "memory", label: "Porque a memória acabou", correct: false }], success: "Correto: a condição falsa encerra o loop antes do corpo." },
+    challenge: {
+      question: "Por que o corpo não executa quando i é igual a n?",
+      hint: "A comparação usa <, não <=.",
+      choices: [{ id: "false", label: "Porque i < n é false", correct: true }, { id: "return", label: "Porque return roda primeiro", correct: false }, { id: "memory", label: "Porque a memória acabou", correct: false }],
+      success: "Correto: a condição falsa encerra o loop antes do corpo.",
+      byRepresentation: {
+        abstract: {
+          question: "O que faz o loop parar?",
+          hint: "Observe a condição de continuação.",
+          choices: [
+            { id: "limite", label: "Quando i atinge o limite", correct: true },
+            { id: "soma", label: "Quando a soma zera", correct: false },
+            { id: "nunca", label: "O loop nunca para", correct: false },
+            { id: "tecla", label: "Quando o usuário aperta uma tecla", correct: false },
+          ],
+          success: "Correto. O loop executa enquanto i < limite, e para quando i alcança o limite.",
+        },
+        practical: {
+          question: "Com limite 3, quantas vezes o corpo do loop executa?",
+          hint: "Conte os passos do trace com limite 3.",
+          choices: [
+            { id: "2", label: "2 vezes", correct: false },
+            { id: "3", label: "3 vezes", correct: true },
+            { id: "4", label: "4 vezes", correct: false },
+            { id: "1", label: "1 vez", correct: false },
+          ],
+          success: "Sim! Com limite 3, i vai de 0 a 2 (3 iterações).",
+        },
+      },
+    },
     trace: createLoopTrace({ limit: 3 }),
     createTrace: createLoopTrace,
   },

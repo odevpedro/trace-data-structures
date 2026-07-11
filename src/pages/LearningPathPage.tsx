@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { learningPath, moduleLabels } from "../content";
 import { useTraceStore } from "../store/useTraceStore";
@@ -5,15 +6,36 @@ import { useTraceStore } from "../store/useTraceStore";
 export function LearningPathPage() {
   const started = useTraceStore((state) => state.startedLessonIds);
   const completed = useTraceStore((state) => state.completedLessonIds);
+  const [search, setSearch] = useState("");
+
+  const query = search.toLowerCase();
+  const filtered = query
+    ? learningPath.filter(
+        (l) =>
+          l.title.toLowerCase().includes(query) ||
+          l.description.toLowerCase().includes(query),
+      )
+    : learningPath;
 
   return (
     <main className="path-page">
       <header className="page-hero">
         <div><span className="eyebrow">Jornada · {learningPath.length} lições</span><h1>Da posição na memória ao Bloom Filter.</h1><p>{learningPath.length} traces conectam estruturas, algoritmos, lógica, memória e system design.</p></div>
         <span className="progress-number">{completed.length} / {learningPath.length} dominados</span>
+        <Link to="/app/progress" className="text-button">Ver progresso →</Link>
       </header>
+      <div className="path-search">
+        <input
+          type="search"
+          placeholder="Filtrar lições…"
+          aria-label="Filtrar lições por nome"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <ol className="path-list">
-        {learningPath.map((lesson, index) => {
+        {filtered.map((lesson) => {
+          const index = learningPath.indexOf(lesson);
           const status = completed.includes(lesson.id) ? "Concluído" : started.includes(lesson.id) ? "Em andamento" : "Novo";
           return (
             <li key={lesson.id}>

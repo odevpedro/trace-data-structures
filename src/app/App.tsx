@@ -5,6 +5,7 @@ import { LandingPage } from "../pages/LandingPage";
 import { LearningPathPage } from "../pages/LearningPathPage";
 import { LessonPage } from "../pages/LessonPage";
 import { ReviewPage } from "../pages/ReviewPage";
+import { ProgressPage } from "../pages/ProgressPage";
 import { ComparePage } from "../pages/ComparePage";
 import {
   createBrowserProgressRepository,
@@ -52,6 +53,7 @@ function AppShell() {
           <Route path="/app/learn" element={<LearningPathPage />} />
           <Route path="/app/lesson/:lessonId" element={<LessonPage />} />
           <Route path="/app/review" element={<ReviewPage />} />
+          <Route path="/app/progress" element={<ProgressPage />} />
           <Route path="/app/compare/:comparisonId" element={<ComparePage />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
