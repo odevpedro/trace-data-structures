@@ -5,7 +5,7 @@ import type {
   ReviewRating,
   ThemePreference,
 } from "../core/progress/types";
-import { createEmptyProgress } from "../core/progress/types";
+import { createEmptyProgress, normalizeProgressSnapshot } from "../core/progress/types";
 import { scheduleReview } from "../core/spaced-repetition/scheduleReview";
 import type {
   Representation,
@@ -57,18 +57,20 @@ function initialStoreState() {
 
 export const useTraceStore = create<TraceStore>((set, get) => ({
   ...initialStoreState(),
-  hydrate: (progress) =>
+  hydrate: (progress) => {
+    const snapshot = normalizeProgressSnapshot(progress);
     set({
-      ...progress,
+      ...snapshot,
       hydrated: true,
       player: {
-        lessonId: progress.lastLessonId,
-        stepIndex: progress.lessonSteps[progress.lastLessonId] ?? 0,
+        lessonId: snapshot.lastLessonId,
+        stepIndex: snapshot.lessonSteps[snapshot.lastLessonId] ?? 0,
         status: "idle",
         representation:
-          progress.lessonRepresentations[progress.lastLessonId] ?? "abstract",
+          snapshot.lessonRepresentations[snapshot.lastLessonId] ?? "abstract",
       },
-    }),
+    });
+  },
   openLesson: ({ id, representations, defaultInputs, maxStep }) => {
     const state = get();
     const storedRepresentation = state.lessonRepresentations[id];

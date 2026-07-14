@@ -1,3 +1,5 @@
+import type { FlowSceneDefinition } from "../flow-scene/types";
+
 export type Representation = "abstract" | "practical" | "memory" | "code";
 
 export type TraceStatus = "idle" | "playing" | "paused" | "completed";
@@ -121,6 +123,17 @@ export interface TraceStep {
   description: string;
   metrics: TraceMetrics;
   codeLine?: number;
+  concept?: {
+    title: string;
+    bubble?: string;
+    body: string;
+    details?: string[];
+    glossary?: { term: string; definition: string }[];
+    payloadTitle?: string;
+    payloadLines?: string[];
+    target?: string;
+    placement?: "top" | "right" | "bottom" | "left";
+  };
 }
 
 export interface TraceDefinition {
@@ -151,14 +164,22 @@ export interface ChallengeDefinition {
   byRepresentation?: Partial<Record<Representation, ChallengeDefinition>>;
 }
 
-export interface LessonControl {
-  id: string;
-  label: string;
-  type: "number";
-  defaultValue: number;
-  min: number;
-  max: number;
-}
+export type LessonControl =
+  | {
+      id: string;
+      label: string;
+      type: "number";
+      defaultValue: number;
+      min: number;
+      max: number;
+    }
+  | {
+      id: string;
+      label: string;
+      type: "select";
+      defaultValue: number;
+      options: { value: number; label: string }[];
+    };
 
 export interface PredictionDefinition {
   prompt: string;
@@ -176,6 +197,10 @@ export interface ComparisonDefinition {
   summaryA: string;
   summaryB: string;
   summaryResult: "neutral" | "good-left" | "good-right";
+  traceA?: TraceDefinition;
+  traceB?: TraceDefinition;
+  representation?: Representation;
+  description?: string;
 }
 
 export interface LimitationDrawer {
@@ -217,6 +242,8 @@ export interface LessonDefinition {
   prediction?: PredictionDefinition;
   trace: TraceDefinition;
   createTrace?: (inputs: Record<string, number>) => TraceDefinition;
+  flowScene?: FlowSceneDefinition;
+  createFlowScene?: (inputs: Record<string, number>, representation: Representation) => FlowSceneDefinition;
   comparisonId?: string;
   limitation?: LimitationDrawer;
 }

@@ -25,6 +25,15 @@ describe("reduceTrace", () => {
     expect(match.nodes["item-2"].emphasis).toBe("success");
   });
 
+  it("permite busca linear ausente sem quebrar o estado final", () => {
+    const lesson = lessonById["linear-search"];
+    const trace = lesson.createTrace?.({ target: 20 }) ?? lesson.trace;
+    const scene = reduceTrace(trace, trace.steps.length - 1);
+
+    expect(scene.nodes.answer.value).toBe(-1);
+    expect(scene.nodes["item-3"].visible).toBe(true);
+  });
+
   it("escolhe apenas o ramo verdadeiro de uma condição", () => {
     const lesson = lessonById["condition-if"];
     const trace = lesson.createTrace?.({ age: 21 }) ?? lesson.trace;
