@@ -26,7 +26,8 @@ export function FlashcardsPanel() {
   const [flipped, setFlipped] = useState(false);
 
   const due = useMemo(() => dueCards(progress), [progress]);
-  const card = due[index];
+  const safeIndex = due.length === 0 ? 0 : Math.min(index, due.length - 1);
+  const card = due[safeIndex];
   const reviewed = useMemo(
     () => flashcards.filter((item) => progress[item.id]?.reviews).length,
     [progress],
@@ -50,7 +51,7 @@ export function FlashcardsPanel() {
   const rate = (rating: ReviewRating) => {
     reviewFlashcard(card.id, rating);
     setFlipped(false);
-    setIndex((current) => (current + 1) % due.length);
+    setIndex(0);
   };
 
   return (
@@ -74,18 +75,18 @@ export function FlashcardsPanel() {
           onClick={() => setFlipped((value) => !value)}
         >
           <span className="flashcard__meta">
-            {card.kind} · {String(index + 1).padStart(2, "0")}
+            {card.kind} · {String(safeIndex + 1).padStart(2, "0")}
           </span>
           <strong>{flipped ? card.back : card.front}</strong>
           <span className="flashcard__hint">{flipped ? "Avalie sua lembrança" : "Clique para revelar"}</span>
         </button>
 
-        <div className="flashcard-dots" aria-label={`Card ${index + 1} de ${due.length}`}>
+        <div className="flashcard-dots" aria-label={`Card ${safeIndex + 1} de ${due.length}`}>
           {due.map((item, itemIndex) => (
             <button
               type="button"
               aria-label={`Abrir card ${itemIndex + 1}`}
-              aria-current={itemIndex === index}
+              aria-current={itemIndex === safeIndex}
               key={item.id}
               onClick={() => {
                 setIndex(itemIndex);

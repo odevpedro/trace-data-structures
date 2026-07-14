@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createEmptyProgress } from "../core/progress/types";
 import type { ProgressRepository } from "../storage/progressRepository";
 import { selectProgressSnapshot, useTraceStore } from "../store/useTraceStore";
 
@@ -27,22 +28,7 @@ export function PersistenceBridge({ repository }: PersistenceBridgeProps) {
       })
       .catch(() => {
         if (!cancelled) {
-          useTraceStore.getState().hydrate({
-            version: 1,
-            lastLessonId: "array",
-            lessonSteps: {},
-            lessonRepresentations: {},
-            lessonInputs: {},
-            startedLessonIds: [],
-            completedLessonIds: [],
-            challengeAttempts: {},
-            flashcards: {},
-            achievementIds: [],
-            dismissedAchievementIds: [],
-            theme: "light",
-            motionPreference: "system",
-            speed: 1,
-          });
+          useTraceStore.getState().hydrate(createEmptyProgress());
         }
       });
 

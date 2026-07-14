@@ -25,19 +25,35 @@ export function PredictionPanel({ lesson, inputs }: PredictionPanelProps) {
         {lesson.controls?.map((control) => (
           <label key={control.id}>
             <span>{control.label}</span>
-            <input
-              type="number"
-              min={control.min}
-              max={control.max}
-              value={inputs[control.id] ?? control.defaultValue}
-              onChange={(event) => {
-                const next = Math.min(
-                  control.max,
-                  Math.max(control.min, Number(event.target.value)),
-                );
-                setLessonInput(lesson.id, control.id, next);
-              }}
-            />
+            {control.type === "number" ? (
+              <input
+                type="number"
+                min={control.min}
+                max={control.max}
+                value={inputs[control.id] ?? control.defaultValue}
+                onChange={(event) => {
+                  const next = Math.min(
+                    control.max,
+                    Math.max(control.min, Number(event.target.value)),
+                  );
+                  setLessonInput(lesson.id, control.id, next);
+                }}
+              />
+            ) : (
+              <select
+                aria-label={control.label}
+                value={inputs[control.id] ?? control.defaultValue}
+                onChange={(event) => {
+                  setLessonInput(lesson.id, control.id, Number(event.target.value));
+                }}
+              >
+                {control.options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            )}
           </label>
         ))}
       </div>

@@ -14,7 +14,7 @@ describe("FlashcardsPanel", () => {
     await user.click(screen.getByRole("button", { name: "Aprendi" }));
 
     expect(useTraceStore.getState().flashcards["array-insert-cost"].box).toBe(1);
-    expect(screen.getByText(/Ao mutar um objeto/)).toBeInTheDocument();
+    expect(screen.getByText(/Quando uma busca linear pode parar/)).toBeInTheDocument();
   });
 
   it("mostra nenhum card vencido quando todos foram revisados hoje", () => {
@@ -29,5 +29,20 @@ describe("FlashcardsPanel", () => {
 
     render(<FlashcardsPanel />);
     expect(screen.getByText("Nenhum card vencido.")).toBeInTheDocument();
+  });
+
+  it("continua navegável ao revisar um card intermediário da fila", async () => {
+    const user = userEvent.setup();
+    useTraceStore.setState({
+      flashcards: {},
+    });
+
+    render(<FlashcardsPanel />);
+
+    await user.click(screen.getByRole("button", { name: "Abrir card 2" }));
+    await user.click(screen.getByRole("button", { name: /Frente do flashcard/ }));
+    await user.click(screen.getByRole("button", { name: "Aprendi" }));
+
+    expect(screen.getByText(/Qual é o custo de inserir no meio de um array/)).toBeInTheDocument();
   });
 });

@@ -8,6 +8,7 @@ interface TimelineControlsProps {
   onStepChange: (step: number) => void;
   onPlayToggle: () => void;
   onSpeedChange: (speed: number) => void;
+  onReplay?: () => void;
 }
 
 export function TimelineControls({
@@ -18,6 +19,7 @@ export function TimelineControls({
   onStepChange,
   onPlayToggle,
   onSpeedChange,
+  onReplay,
 }: TimelineControlsProps) {
   const playing = status === "playing";
 
@@ -51,6 +53,16 @@ export function TimelineControls({
         >
           →
         </button>
+        {onReplay ? (
+          <button
+            className="icon-button"
+            type="button"
+            aria-label="Reiniciar"
+            onClick={onReplay}
+          >
+            ↺
+          </button>
+        ) : null}
       </div>
 
       <label className="timeline__range">

@@ -38,7 +38,8 @@ function AppShell() {
         <nav className="primary-nav" aria-label="Navegação principal">
           <NavLink to="/app/learn">Aprender</NavLink>
           <NavLink to="/app/review">Revisar</NavLink>
-          <NavLink to="/app/lesson/request-flow">System design</NavLink>
+          <NavLink to="/app/progress">Progresso</NavLink>
+          <NavLink to="/app/lesson/backend-router">System design</NavLink>
         </nav>
         <div className="top-actions">
           <span className="domain-count">{completed} dominados</span>
@@ -46,6 +47,12 @@ function AppShell() {
           <button className="theme-button" type="button" aria-label={`Usar tema ${theme === "dark" ? "claro" : "escuro"}`} onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>◐</button>
         </div>
       </header>
+      <nav className="mobile-nav" aria-label="Navegação móvel">
+        <NavLink to="/app/learn">Aprender</NavLink>
+        <NavLink to="/app/review">Revisar</NavLink>
+        <NavLink to="/app/progress">Progresso</NavLink>
+        <NavLink to="/app/lesson/backend-router">Sistemas</NavLink>
+      </nav>
       <div id="main-content" className="content-shell">
         <Routes>
           <Route path="/" element={<LandingPage />} />

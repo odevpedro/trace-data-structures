@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { learningPath, moduleLabels } from "../content";
 
 export function LandingPage() {
+  const previewLessons = learningPath.slice(0, 6);
+
   return (
     <main>
       <section className="landing-hero">
@@ -20,10 +22,10 @@ export function LandingPage() {
         <div className="hero-trace" aria-label="Prévia da jornada de aprendizagem">
           <div className="hero-trace__header">
             <span>vertical_slice.trace</span>
-            <span>{String(learningPath.length).padStart(2, "0")} estados</span>
+            <span>{String(learningPath.length).padStart(2, "0")} lições</span>
           </div>
           <ol>
-            {learningPath.map((lesson, index) => (
+            {previewLessons.map((lesson, index) => (
               <li key={lesson.id}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div><strong>{lesson.shortTitle}</strong><small>{moduleLabels[lesson.module]}</small></div>
@@ -31,6 +33,7 @@ export function LandingPage() {
               </li>
             ))}
           </ol>
+          <p className="hero-trace__more">Prévia inicial. A jornada completa segue com {learningPath.length} lições.</p>
         </div>
       </section>
 

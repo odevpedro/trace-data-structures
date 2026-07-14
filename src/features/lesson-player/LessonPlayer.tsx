@@ -4,6 +4,7 @@ import type { LessonDefinition, Representation } from "../../core/trace-engine/t
 import {
   defaultInputsFor,
   difficultyLabels,
+  flowSceneForLesson,
   moduleLabels,
   traceForLesson,
 } from "../../content/lessons";
@@ -14,6 +15,7 @@ import { ChallengePanel } from "./ChallengePanel";
 import { PredictionPanel } from "./PredictionPanel";
 import { TraceCanvas } from "./TraceCanvas";
 import { Drawer } from "../drawer/Drawer";
+import { FlowScenePlayer } from "../flow-scene/FlowScenePlayer";
 
 const representationLabels: Record<Representation, string> = {
   abstract: "Abstrato",
@@ -43,13 +45,19 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const defaults = useMemo(() => defaultInputsFor(lesson), [lesson]);
   const inputs = storedInputs ?? defaults;
   const trace = useMemo(() => traceForLesson(lesson, inputs), [lesson, inputs]);
-  const maxStep = trace.steps.length - 1;
   const activePlayer = player.lessonId === lesson.id;
-  const stepIndex = activePlayer ? Math.min(player.stepIndex, maxStep) : 0;
   const representation = activePlayer && lesson.representations.includes(player.representation)
     ? player.representation
     : lesson.representations[0];
-  const currentStep = trace.steps[stepIndex];
+  const flowScene = useMemo(
+    () => flowSceneForLesson(lesson, inputs, representation),
+    [inputs, lesson, representation],
+  );
+  const maxStep = (flowScene?.steps.length ?? trace.steps.length) - 1;
+  const stepIndex = activePlayer ? Math.min(player.stepIndex, maxStep) : 0;
+  const traceStepIndex = Math.min(stepIndex, Math.max(0, trace.steps.length - 1));
+  const currentStep = trace.steps[traceStepIndex];
+  const currentSceneStep = flowScene?.steps[stepIndex];
 
   useEffect(() => {
     if (!hydrated) return;
@@ -89,6 +97,11 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     setStatus("playing");
   };
 
+  const replay = () => {
+    setStep(0, maxStep);
+    setStatus("idle");
+  };
+
   const handleKeyboard = (event: React.KeyboardEvent<HTMLElement>) => {
     const tagName = (event.target as HTMLElement).tagName;
     if (["INPUT", "BUTTON", "SELECT", "TEXTAREA"].includes(tagName)) return;
@@ -112,9 +125,9 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   }
 
   return (
-    <article className="lesson-player" tabIndex={0} onKeyDown={handleKeyboard} data-focus={focusMode && player.status === "playing"}>
+    <article className="lesson-player" tabIndex={0} onKeyDown={handleKeyboard} data-focus={focusMode}>
       <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {lesson.title}. Passo {stepIndex} de {maxStep}. {currentStep.description}
+        {lesson.title}. Passo {stepIndex} de {maxStep}. {currentSceneStep?.caption ?? currentStep.description}
       </div>
 
       <header className="lesson-header">
@@ -172,12 +185,30 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
           </span>
         </div>
 
-        <TraceCanvas
-          trace={trace}
-          stepIndex={stepIndex}
-          representation={representation}
-          reducedMotion={reducedMotion}
-        />
+        {flowScene && representation !== "code" ? (
+          <FlowScenePlayer
+            scene={flowScene}
+            stepIndex={stepIndex}
+            reducedMotion={reducedMotion}
+            speed={speed}
+            onStepSelect={changeStep}
+          />
+        ) : (
+          <TraceCanvas
+            trace={trace}
+            stepIndex={stepIndex}
+            representation={representation}
+            reducedMotion={reducedMotion}
+          />
+        )}
+
+        {!flowScene && currentStep.concept ? (
+          <section className="concept-panel" aria-label="Conceito em foco">
+            <span className="eyebrow">Conceito em foco</span>
+            <strong>{currentStep.concept.title}</strong>
+            <p>{currentStep.concept.body}</p>
+          </section>
+        ) : null}
 
         {reducedMotion ? (
           <ol className="reduced-steps" aria-label="Descrição estática dos passos">
@@ -193,7 +224,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
         <div className="narration-row">
           <div>
             <span className="eyebrow">{currentStep.eventLabel}</span>
-            <p>{currentStep.captions[representation] ?? currentStep.description}</p>
+            <p>{currentSceneStep?.caption ?? currentStep.captions[representation] ?? currentStep.description}</p>
           </div>
           <span className="complexity-chip">{currentStep.metrics.complexity}</span>
         </div>
@@ -206,6 +237,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
           onStepChange={changeStep}
           onPlayToggle={togglePlay}
           onSpeedChange={setSpeed}
+          onReplay={replay}
         />
 
         <button

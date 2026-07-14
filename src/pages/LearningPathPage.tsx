@@ -30,7 +30,7 @@ export function LearningPathPage() {
   return (
     <main className="path-page">
       <header className="page-hero">
-        <div><span className="eyebrow">Jornada · {learningPath.length} lições</span><h1>Da posição na memória ao Bloom Filter.</h1><p>{learningPath.length} traces conectam estruturas, algoritmos, lógica, memória e system design.</p></div>
+        <div><span className="eyebrow">Jornada · {learningPath.length} lições</span><h1>Da posição na memória ao backend assíncrono.</h1><p>{learningPath.length} traces conectam estruturas, algoritmos, lógica, memória, backend e system design.</p></div>
         <span className="progress-number">{completed.length} / {learningPath.length} dominados</span>
         <Link to="/app/progress" className="text-button">Ver progresso →</Link>
       </header>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { achievements } from "../content/achievements";
+import { learningPath } from "../content";
 import { useTraceStore } from "../store/useTraceStore";
 
 export function ProgressPage() {
@@ -7,7 +8,7 @@ export function ProgressPage() {
   const startedLessonIds = useTraceStore((s) => s.startedLessonIds);
   const achievementIds = useTraceStore((s) => s.achievementIds);
   const flashcards = useTraceStore((s) => s.flashcards);
-  const totalLessons = 25;
+  const totalLessons = learningPath.length;
   const completed = completedLessonIds.length;
   const started = startedLessonIds.length;
   const totalReviews = Object.values(flashcards).reduce((sum, c) => sum + c.reviews, 0);

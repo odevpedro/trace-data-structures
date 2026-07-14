@@ -11,7 +11,7 @@ export function ComparePage() {
   const { comparisonId = "" } = useParams();
   const definition = comparisonById[comparisonId];
   const reducedMotion = useReducedMotion();
-  const representation = "abstract";
+  const representation = definition?.representation ?? "abstract";
 
   const [stepIndex, setStepIndex] = useState(0);
   const [status, setStatus] = useState<TraceStatus>("idle");
@@ -23,12 +23,14 @@ export function ComparePage() {
   const lessonB = lessonById[definition.lessonIdB];
   if (!lessonA || !lessonB) return <Navigate replace to="/app/learn" />;
 
-  const traceA = traceForLesson(lessonA, defaultInputsFor(lessonA));
-  const traceB = traceForLesson(lessonB, defaultInputsFor(lessonB));
-  const maxStep = Math.min(traceA.steps.length, traceB.steps.length) - 1;
+  const traceA = definition.traceA ?? traceForLesson(lessonA, defaultInputsFor(lessonA));
+  const traceB = definition.traceB ?? traceForLesson(lessonB, defaultInputsFor(lessonB));
+  const maxStep = Math.max(traceA.steps.length, traceB.steps.length) - 1;
+  const stepIndexA = Math.min(stepIndex, traceA.steps.length - 1);
+  const stepIndexB = Math.min(stepIndex, traceB.steps.length - 1);
 
-  const stepA = traceA.steps[Math.min(stepIndex, maxStep)];
-  const stepB = traceB.steps[Math.min(stepIndex, maxStep)];
+  const stepA = traceA.steps[stepIndexA];
+  const stepB = traceB.steps[stepIndexB];
 
   const handleStep = (next: number) => {
     setStatus("paused");
@@ -42,6 +44,11 @@ export function ComparePage() {
     }
     if (stepIndex >= maxStep) setStepIndex(0);
     setStatus("playing");
+  };
+
+  const replay = () => {
+    setStepIndex(0);
+    setStatus("idle");
   };
 
   useEffect(() => {
@@ -72,6 +79,7 @@ export function ComparePage() {
           <strong>{definition.labelA}</strong> vs{" "}
           <strong>{definition.labelB}</strong>
         </p>
+        {definition.description ? <p>{definition.description}</p> : null}
       </header>
 
       <div className="compare-stages">
@@ -82,7 +90,7 @@ export function ComparePage() {
           </div>
           <TraceCanvas
             trace={traceA}
-            stepIndex={Math.min(stepIndex, maxStep)}
+            stepIndex={stepIndexA}
             representation={representation}
             reducedMotion={reducedMotion}
           />
@@ -111,7 +119,7 @@ export function ComparePage() {
           </div>
           <TraceCanvas
             trace={traceB}
-            stepIndex={Math.min(stepIndex, maxStep)}
+            stepIndex={stepIndexB}
             representation={representation}
             reducedMotion={reducedMotion}
           />
@@ -142,6 +150,7 @@ export function ComparePage() {
         onStepChange={handleStep}
         onPlayToggle={togglePlay}
         onSpeedChange={setSpeed}
+        onReplay={replay}
       />
 
       <div className="compare-summary">
