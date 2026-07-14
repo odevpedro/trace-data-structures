@@ -7,6 +7,7 @@ import type {
   TraceMetrics,
   TraceStep,
 } from "../core/trace-engine/types";
+import { createDijkstraFlowScene } from "./graphFlowScenes";
 
 const allRepresentations: Representation[] = ["abstract", "practical", "memory", "code"];
 
@@ -226,12 +227,12 @@ const dfsTrace: TraceDefinition = {
         practical: "2026",
         memory: "F",
       }),
-      node("target", "block", 32, 360, 110, 52, {
+      node("target", "block", 32, 300, 110, 52, {
         abstract: "G",
         practical: "contrato.pdf",
         memory: "G",
       }),
-      node("stack", "tag", 296, 360, 100, 28, {
+      node("stack", "tag", 296, 314, 100, 28, {
         abstract: "[A]",
         practical: "[Arquivos]",
         memory: "pilha",
@@ -337,25 +338,25 @@ const dijkstraTrace: TraceDefinition = {
   scene: {
     nodes: [
       node("a", "block", 34, 130, 90, 52, {
-        abstract: "A·0",
-        practical: "Casa·0",
-        memory: "A·0",
-      }),
+        abstract: "A",
+        practical: "Casa",
+        memory: "A",
+      }, { valueLabels: { abstract: "A = ", practical: "Casa = ", memory: "A = " }, value: 0 }),
       node("b", "block", 170, 34, 90, 52, {
-        abstract: "B·∞",
-        practical: "Avenida·∞",
-        memory: "B·∞",
-      }),
+        abstract: "B",
+        practical: "Avenida",
+        memory: "B",
+      }, { valueLabels: { abstract: "B = ", practical: "Avenida = ", memory: "B = " }, value: "∞" }),
       node("c", "block", 170, 220, 90, 52, {
-        abstract: "C·∞",
-        practical: "Ponte·∞",
-        memory: "C·∞",
-      }),
+        abstract: "C",
+        practical: "Ponte",
+        memory: "C",
+      }, { valueLabels: { abstract: "C = ", practical: "Ponte = ", memory: "C = " }, value: "∞" }),
       node("d", "block", 340, 130, 100, 52, {
-        abstract: "D·∞",
-        practical: "Trabalho·∞",
-        memory: "D·∞",
-      }),
+        abstract: "D",
+        practical: "Trabalho",
+        memory: "D",
+      }, { valueLabels: { abstract: "D = ", practical: "Trabalho = ", memory: "D = " }, value: "∞" }),
       node("wAB", "tag", 80, 80, 50, 24, {
         abstract: "2",
         practical: "2min",
@@ -382,10 +383,10 @@ const dijkstraTrace: TraceDefinition = {
         memory: "1",
       }),
       node("pq", "tag", 340, 300, 130, 28, {
-        abstract: "[(A,0)]",
-        practical: "[(Casa,0)]",
+        abstract: "fila",
+        practical: "fila",
         memory: "fila prioridade",
-      }),
+      }, { valueLabels: { abstract: "pq = ", practical: "pq = ", memory: "pq = " }, value: "[(A,0)]" }),
     ],
     edges: [
       { id: "ab", from: "a", to: "b", directed: true },
@@ -418,7 +419,10 @@ const dijkstraTrace: TraceDefinition = {
     step(
       "dijkstra-start",
       "START",
-      [{ type: "HIGHLIGHT", targets: ["a", "pq"], emphasis: "active" }],
+      [
+        { type: "HIGHLIGHT", targets: ["a", "pq"], emphasis: "active" },
+        { type: "WRITE_MEMORY", address: "pq", target: "pq", value: "[(A,0)]" },
+      ],
       "Dijkstra: A=0, demais ∞.",
       "Dijkstra: Casa=0, demais ∞.",
       "Distância inicial zero para A; todos os outros são infinito.",
@@ -432,6 +436,9 @@ const dijkstraTrace: TraceDefinition = {
         { type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" },
         { type: "HIGHLIGHT", targets: ["b", "c", "wAB", "wAC"], emphasis: "active" },
         { type: "HIGHLIGHT", targets: ["ab", "ac"], emphasis: "active" },
+        { type: "WRITE_MEMORY", address: "B", target: "b", value: 2 },
+        { type: "WRITE_MEMORY", address: "C", target: "c", value: 5 },
+        { type: "WRITE_MEMORY", address: "pq", target: "pq", value: "[(B,2),(C,5)]" },
       ],
       "A→B=2, A→C=5. B=2, C=5.",
       "Casa→Avenida=2min, Casa→Ponte=5min. Avenida=2, Ponte=5.",
@@ -445,6 +452,7 @@ const dijkstraTrace: TraceDefinition = {
       [
         { type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" },
         { type: "HIGHLIGHT", targets: ["b"], emphasis: "active" },
+        { type: "WRITE_MEMORY", address: "pq", target: "pq", value: "[(B,2),(C,5)] → pop B" },
       ],
       "B é o mínimo (2). Relaxa B.",
       "Avenida é o mínimo (2min). Relaxa Avenida.",
@@ -459,6 +467,9 @@ const dijkstraTrace: TraceDefinition = {
         { type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" },
         { type: "HIGHLIGHT", targets: ["c", "d", "wBC", "wBD"], emphasis: "active" },
         { type: "HIGHLIGHT", targets: ["bc", "bd"], emphasis: "active" },
+        { type: "WRITE_MEMORY", address: "C", target: "c", value: 3 },
+        { type: "WRITE_MEMORY", address: "D", target: "d", value: 6 },
+        { type: "WRITE_MEMORY", address: "pq", target: "pq", value: "[(C,3),(D,6)]" },
       ],
       "B→C=1, B→D=4. C=3, D=6.",
       "Avenida→Ponte=1min, Avenida→Trabalho=4min. Ponte=3, Trabalho=6.",
@@ -474,6 +485,8 @@ const dijkstraTrace: TraceDefinition = {
         { type: "HIGHLIGHT", targets: ["c"], emphasis: "visited" },
         { type: "HIGHLIGHT", targets: ["d", "wCD"], emphasis: "active" },
         { type: "HIGHLIGHT", targets: ["cd"], emphasis: "active" },
+        { type: "WRITE_MEMORY", address: "D", target: "d", value: 4 },
+        { type: "WRITE_MEMORY", address: "pq", target: "pq", value: "[(D,4)]" },
       ],
       "C é mínimo (3). C→D=1. D=4.",
       "Ponte é mínimo (3min). Ponte→Trabalho=1min. Trabalho=4.",
@@ -487,6 +500,7 @@ const dijkstraTrace: TraceDefinition = {
       [
         { type: "HIGHLIGHT", targets: ["d"], emphasis: "success" },
         { type: "HIGHLIGHT", targets: ["ab", "bc", "cd"], emphasis: "success" },
+        { type: "WRITE_MEMORY", address: "pq", target: "pq", value: "[]" },
       ],
       "D=4. Caminho: A→B→C→D = 4.",
       "Trabalho=4min. Caminho: Casa→Avenida→Ponte→Trabalho = 4min.",
@@ -628,16 +642,17 @@ const bellmanFordTrace: TraceDefinition = {
   id: "bellman-ford",
   scene: {
     nodes: [
-      node("a", "block", 34, 130, 80, 52, { abstract: "A·0", practical: "Partida·0", memory: "A·0" }),
-      node("b", "block", 170, 34, 80, 52, { abstract: "B·∞", practical: "Atalho·∞", memory: "B·∞" }),
-      node("c", "block", 170, 220, 80, 52, { abstract: "C·∞", practical: "Ponto C·∞", memory: "C·∞" }),
-      node("d", "block", 340, 130, 80, 52, { abstract: "D·∞", practical: "Destino·∞", memory: "D·∞" }),
+      node("a", "block", 34, 130, 92, 52, { abstract: "A", practical: "Partida", memory: "A" }, { valueLabels: { abstract: "A = ", practical: "Partida = ", memory: "A = " }, value: 0 }),
+      node("b", "block", 170, 34, 92, 52, { abstract: "B", practical: "Atalho", memory: "B" }, { valueLabels: { abstract: "B = ", practical: "Atalho = ", memory: "B = " }, value: "∞" }),
+      node("c", "block", 170, 220, 92, 52, { abstract: "C", practical: "Ponto C", memory: "C" }, { valueLabels: { abstract: "C = ", practical: "Ponto C = ", memory: "C = " }, value: "∞" }),
+      node("d", "block", 340, 130, 104, 52, { abstract: "D", practical: "Destino", memory: "D" }, { valueLabels: { abstract: "D = ", practical: "Destino = ", memory: "D = " }, value: "∞" }),
       node("wAB", "tag", 80, 80, 50, 24, { abstract: "4", practical: "4min", memory: "4" }),
       node("wAC", "tag", 80, 200, 50, 24, { abstract: "3", practical: "3min", memory: "3" }),
       node("wBC", "tag", 170, 134, 50, 24, { abstract: "-2", practical: "-2min", memory: "-2" }),
       node("wBD", "tag", 280, 34, 50, 24, { abstract: "5", practical: "5min", memory: "5" }),
       node("wCD", "tag", 280, 220, 50, 24, { abstract: "2", practical: "2min", memory: "2" }),
-      node("pq", "tag", 34, 310, 160, 28, { abstract: "{}", practical: "{}", memory: "{}" }),
+      node("pq", "tag", 34, 310, 200, 28, { abstract: "distâncias", practical: "distâncias", memory: "distâncias" }, { valueLabels: { abstract: "dist = ", practical: "dist = ", memory: "dist = " }, value: "{A:0}" }),
+      node("check", "tag", 260, 310, 160, 28, { abstract: "checar ciclo", practical: "passo extra", memory: "ciclo negativo?" }, { visible: false }),
     ],
     edges: [
       { id: "ab", from: "a", to: "b", directed: true },
@@ -656,15 +671,19 @@ const bellmanFordTrace: TraceDefinition = {
     "      if (dist[u] + w < dist[v]) dist[v] = dist[u] + w;",
     "    }",
     "  }",
+    "  for (const { u, v, w } of graph.edges) {",
+    "    if (dist[u] + w < dist[v]) throw new Error('negative cycle');",
+    "  }",
     "  return dist;",
     "}",
   ],
   steps: [
-    step("bf-start", "START", [{ type: "HIGHLIGHT", targets: ["a", "pq"], emphasis: "active" }], "Bellman-Ford: A=0, demais ∞. V=4 nós.", "Bellman-Ford: Partida=0, demais ∞. 4 pontos no trajeto.", "Distância inicial zero para A; todas as outras são infinito.", metrics(0, 0, "O(1)", "Inicialização das distâncias."), 1),
-    step("bf-relax-1", "RELAX", [{ type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["b", "c", "wAB", "wAC"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["ab", "ac"], emphasis: "active" }], "Iteração 1: A→B=4, A→C=3. B=4, C=3.", "Iteração 1: Partida→Atalho=4min, Partida→Ponto C=3min. Atalho=4, Ponto C=3.", "Primeira rodada: relaxa arestas saindo de A.", metrics(2, 2, "O(V·E)", "Duas arestas relaxadas na primeira iteração."), 4),
-    step("bf-relax-2", "RELAX", [{ type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["c", "d", "wBC", "wBD"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["bc", "bd"], emphasis: "active" }], "Iteração 2: B→C=4+(-2)=2 (melhora C: 3→2). B→D=4+5=9.", "Iteração 2: Atalho→Ponto C=4+(-2)=2min (melhor que 3). Atalho→Destino=9min.", "Aresta negativa reduz distância de C de 3 para 2.", metrics(4, 3, "O(V·E)", "Relaxamento com peso negativo descoberto."), 4),
-    step("bf-relax-3", "RELAX", [{ type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["c"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["d", "wCD"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["cd"], emphasis: "active" }], "Iteração 3: C→D=2+2=4 (melhora D: 9→4).", "Iteração 3: Ponto C→Destino=2+2=4min (melhor que 9).", "Caminho final A→C→D = 3+2=5 ou A→B→C→D = 4+(-2)+2=4.", metrics(6, 4, "O(V·E)", "Terceira iteração melhora D."), 4),
-    step("bf-done", "DONE", [{ type: "HIGHLIGHT", targets: ["d"], emphasis: "success" }, { type: "HIGHLIGHT", targets: ["ab", "bc", "cd"], emphasis: "success" }], "D=4. Caminho: A→B→C→D = 4+(-2)+2 = 4.", "Destino=4min. Rota: Partida→Atalho→Ponto C→Destino.", "Bellman-Ford encontrou caminho mais barato usando aresta negativa.", metrics(6, 4, "O(V·E)*", "V-1=3 iterações × E=5 arestas = 15 relaxamentos no pior caso."), 7),
+    step("bf-start", "START", [{ type: "HIGHLIGHT", targets: ["a", "pq"], emphasis: "active" }, { type: "WRITE_MEMORY", address: "dist", target: "pq", value: "{A:0}" }], "Bellman-Ford: A=0, demais ∞. V=4 nós.", "Bellman-Ford: Partida=0, demais ∞. 4 pontos no trajeto.", "Distância inicial zero para A; todas as outras são infinito.", metrics(0, 0, "O(1)", "Inicialização das distâncias."), 1),
+    step("bf-relax-1", "RELAX", [{ type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["b", "c", "wAB", "wAC"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["ab", "ac"], emphasis: "active" }, { type: "WRITE_MEMORY", address: "B", target: "b", value: 4 }, { type: "WRITE_MEMORY", address: "C", target: "c", value: 3 }, { type: "WRITE_MEMORY", address: "dist", target: "pq", value: "{A:0,B:4,C:3}" }], "Iteração 1: A→B=4, A→C=3. B=4, C=3.", "Iteração 1: Partida→Atalho=4min, Partida→Ponto C=3min. Atalho=4, Ponto C=3.", "Primeira rodada: relaxa arestas saindo de A.", metrics(2, 2, "O(V·E)", "Duas arestas relaxadas na primeira iteração."), 4),
+    step("bf-relax-2", "RELAX", [{ type: "HIGHLIGHT", targets: ["a"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["c", "d", "wBC", "wBD"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["bc", "bd"], emphasis: "active" }, { type: "WRITE_MEMORY", address: "C", target: "c", value: 2 }, { type: "WRITE_MEMORY", address: "D", target: "d", value: 9 }, { type: "WRITE_MEMORY", address: "dist", target: "pq", value: "{A:0,B:4,C:2,D:9}" }], "Iteração 2: B→C=4+(-2)=2 (melhora C: 3→2). B→D=4+5=9.", "Iteração 2: Atalho→Ponto C=4+(-2)=2min (melhor que 3). Atalho→Destino=9min.", "Aresta negativa reduz distância de C de 3 para 2.", metrics(4, 3, "O(V·E)", "Relaxamento com peso negativo descoberto."), 4),
+    step("bf-relax-3", "RELAX", [{ type: "HIGHLIGHT", targets: ["b"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["c"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["d", "wCD"], emphasis: "active" }, { type: "HIGHLIGHT", targets: ["cd"], emphasis: "active" }, { type: "WRITE_MEMORY", address: "D", target: "d", value: 4 }, { type: "WRITE_MEMORY", address: "dist", target: "pq", value: "{A:0,B:4,C:2,D:4}" }], "Iteração 3: C→D=2+2=4 (melhora D: 9→4).", "Iteração 3: Ponto C→Destino=2+2=4min (melhor que 9).", "Caminho final A→C→D = 3+2=5 ou A→B→C→D = 4+(-2)+2=4.", metrics(6, 4, "O(V·E)", "Terceira iteração melhora D."), 4),
+    step("bf-cycle-check", "CHECK_NEGATIVE_CYCLE", [{ type: "INSERT", target: "check" }, { type: "HIGHLIGHT", targets: ["check", "ab", "ac", "bc", "bd", "cd"], emphasis: "active" }], "Passo extra: nenhuma aresta ainda melhora distâncias.", "Checagem final: não existe ciclo negativo neste grafo.", "Bellman-Ford precisa de uma passada final para garantir que nenhum ciclo negativo continue diminuindo distâncias.", metrics(7, 5, "O(E)", "Passada extra para detectar ciclos negativos."), 8),
+    step("bf-done", "DONE", [{ type: "HIGHLIGHT", targets: ["check"], emphasis: "visited" }, { type: "HIGHLIGHT", targets: ["d"], emphasis: "success" }, { type: "HIGHLIGHT", targets: ["ab", "bc", "cd"], emphasis: "success" }], "D=4. Caminho: A→B→C→D = 4+(-2)+2 = 4.", "Destino=4min. Rota: Partida→Atalho→Ponto C→Destino.", "Bellman-Ford encontrou caminho mais barato e confirmou ausência de ciclo negativo.", metrics(7, 5, "O(V·E)", "V-1 iterações mais uma checagem final de ciclo negativo."), 10),
   ],
 };
 
@@ -778,6 +797,7 @@ export const graphLessons: LessonDefinition[] = [
       success: "Correto: relaxamento encontrou caminho mais barato via B (2+1=3 < 5).",
     },
     trace: dijkstraTrace,
+    createFlowScene: (_, representation) => createDijkstraFlowScene(representation),
   },
   {
     id: "union-find",

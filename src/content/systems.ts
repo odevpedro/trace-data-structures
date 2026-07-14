@@ -7,6 +7,7 @@ import type {
   TraceMetrics,
   TraceStep,
 } from "../core/trace-engine/types";
+import { btreeFlowScene } from "./specializedFlowScenes";
 
 const allRepresentations: Representation[] = ["abstract", "practical", "memory", "code"];
 
@@ -623,6 +624,7 @@ export const systemsLessons: LessonDefinition[] = [
       success: "Exato: páginas têm capacidade fixa; ao transbordar, metade das chaves vai para uma nova página.",
     },
     trace: btreeTrace,
+    flowScene: btreeFlowScene,
   },
   {
     id: "lru",

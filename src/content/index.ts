@@ -4,7 +4,10 @@ import { indexedLessons } from "./indexed";
 import { hierarchicalLessons } from "./hierarchical";
 import { graphLessons } from "./graphs";
 import { systemsLessons } from "./systems";
-import type { LessonDefinition } from "../core/trace-engine/types";
+import { backendLessons } from "./backend";
+import { createGeneratedFlowScene } from "./generatedFlowScenes";
+import type { LessonDefinition, Representation } from "../core/trace-engine/types";
+import type { FlowSceneDefinition } from "../core/flow-scene/types";
 
 export const learningPath: LessonDefinition[] = [
   ...lessons,
@@ -13,6 +16,7 @@ export const learningPath: LessonDefinition[] = [
   ...hierarchicalLessons,
   ...graphLessons,
   ...systemsLessons,
+  ...backendLessons,
 ];
 
 export const lessonById = Object.fromEntries(
@@ -36,4 +40,15 @@ export function traceForLesson(
   inputs: Record<string, number>,
 ) {
   return lesson.createTrace?.(inputs) ?? lesson.trace;
+}
+
+export function flowSceneForLesson(
+  lesson: LessonDefinition,
+  inputs: Record<string, number>,
+  representation: Representation,
+): FlowSceneDefinition | undefined {
+  const explicitFlowScene = lesson.createFlowScene?.(inputs, representation) ?? lesson.flowScene;
+  if (explicitFlowScene) return explicitFlowScene;
+  const trace = traceForLesson(lesson, inputs);
+  return createGeneratedFlowScene(lesson, trace, representation);
 }

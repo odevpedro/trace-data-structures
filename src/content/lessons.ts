@@ -7,6 +7,13 @@ import type {
   TraceMetrics,
   TraceStep,
 } from "../core/trace-engine/types";
+import type { FlowSceneDefinition } from "../core/flow-scene/types";
+import { createGeneratedFlowScene } from "./generatedFlowScenes";
+import {
+  createIfFlowScene,
+  createLinearSearchFlowScene,
+  createLoopFlowScene,
+} from "./logicFlowScenes";
 
 const allRepresentations: Representation[] = ["abstract", "practical", "memory", "code"];
 
@@ -297,106 +304,110 @@ const arrayTrace: TraceDefinition = {
   ],
 };
 
-const linearSearchTrace: TraceDefinition = {
-  id: "linear-search",
-  scene: {
-    nodes: [
-      node("target", "pill", 248, 52, 144, 44, {
-        abstract: "alvo = 12",
-        practical: "buscar Música",
-        memory: "alvo @ 0x080 = 12",
-      }),
-      ...[
-        ["item-0", "4", "Câmera", "0x100 · 4"],
-        ["item-1", "8", "Mapas", "0x104 · 8"],
-        ["item-2", "12", "Música", "0x108 · 12"],
-        ["item-3", "16", "Fotos", "0x10C · 16"],
-      ].map(([id, abstract, practical, memory], index) =>
-        node(id, "block", 77 + index * 128, 174, 104, 64, {
-          abstract,
-          practical,
-          memory,
-        }),
-      ),
-      node("answer", "tag", 236, 274, 168, 34, {
-        abstract: "índice = ?",
-        practical: "posição = ?",
-        memory: "endereço = ?",
-      }),
-    ],
-    edges: [],
-  },
-  code: [
-    "function linearSearch(items, target) {",
-    "  for (let i = 0; i < items.length; i++) {",
-    "    if (items[i] === target) return i;",
-    "  }",
-    "  return -1;",
-    "}",
-  ],
-  steps: [
+const linearSearchItems = [
+  { id: "item-0", value: 4, practical: "Câmera", memory: "0x100 · 4" },
+  { id: "item-1", value: 8, practical: "Mapas", memory: "0x104 · 8" },
+  { id: "item-2", value: 12, practical: "Música", memory: "0x108 · 12" },
+  { id: "item-3", value: 16, practical: "Fotos", memory: "0x10C · 16" },
+] as const;
+
+function createLinearSearchTrace(inputs: Record<string, number>): TraceDefinition {
+  const target = Math.max(0, inputs.target ?? 12);
+  const foundIndex = linearSearchItems.findIndex((item) => item.value === target);
+  const checkedItems = foundIndex === -1
+    ? linearSearchItems
+    : linearSearchItems.slice(0, foundIndex + 1);
+  const practicalTarget = linearSearchItems.find((item) => item.value === target)?.practical ?? `valor ${target}`;
+  const steps: TraceStep[] = [
     step(
       "search-start",
       "OBSERVE",
       [{ type: "HIGHLIGHT", targets: ["target"], emphasis: "active" }],
       "A busca conhece o alvo, não sua posição.",
-      "A interface precisa localizar Música.",
+      `A interface precisa localizar ${practicalTarget}.`,
       "Sem índice auxiliar, começamos no primeiro elemento.",
       metrics(0, 0, "O(1)", "Preparar alvo e cursor é constante."),
       0,
     ),
-    step(
-      "search-4",
-      "COMPARE",
-      [
-        { type: "HIGHLIGHT", targets: ["target"], emphasis: "idle" },
-        { type: "COMPARE", targets: ["item-0", "target"] },
-      ],
-      "4 não é 12; avance.",
-      "Câmera não é Música; avance.",
-      "A primeira comparação falha e o cursor segue em frente.",
-      metrics(1, 1, "O(n)", "Busca linear pode tocar cada item no pior caso."),
-      2,
-    ),
-    step(
-      "search-8",
-      "COMPARE",
-      [
-        { type: "HIGHLIGHT", targets: ["item-0"], emphasis: "visited" },
-        { type: "COMPARE", targets: ["item-1", "target"] },
-      ],
-      "8 também não é 12.",
-      "Mapas também não é Música.",
-      "A busca preserva o histórico visual dos itens já lidos.",
-      metrics(2, 2, "O(n)", "O custo observado já é duas comparações."),
-      2,
-    ),
-    step(
-      "search-12",
-      "COMPARE",
-      [
-        { type: "HIGHLIGHT", targets: ["item-1"], emphasis: "visited" },
-        { type: "COMPARE", targets: ["item-2", "target"] },
-        { type: "HIGHLIGHT", targets: ["item-2"], emphasis: "success" },
-      ],
-      "12 corresponde ao alvo.",
-      "Música foi encontrada.",
-      "A condição de igualdade encerra o loop no índice 2.",
-      metrics(3, 3, "O(n)", "Caso observado: três de quatro itens tocados."),
-      2,
-    ),
+  ];
+
+  checkedItems.forEach((item, index) => {
+    const previous = checkedItems[index - 1];
+    const match = item.value === target;
+    steps.push(
+      step(
+        `search-${item.value}`,
+        "COMPARE",
+        [
+          ...(previous ? [{ type: "HIGHLIGHT", targets: [previous.id], emphasis: "visited" } satisfies TraceEvent] : [{ type: "HIGHLIGHT", targets: ["target"], emphasis: "idle" } satisfies TraceEvent]),
+          { type: "COMPARE", targets: [item.id, "target"] },
+          ...(match ? [{ type: "HIGHLIGHT", targets: [item.id], emphasis: "success" } satisfies TraceEvent] : []),
+        ],
+        match ? `${item.value} corresponde ao alvo.` : `${item.value} não é ${target}; avance.`,
+        match
+          ? `${item.practical} foi encontrado${item.practical === practicalTarget ? "" : ` para o valor ${target}`}.`
+          : `${item.practical} não corresponde a ${practicalTarget}; avance.`,
+        match
+          ? `A condição de igualdade encerra o loop no índice ${index}.`
+          : index === 0
+            ? "A primeira comparação falha e o cursor segue em frente."
+            : "A busca preserva o histórico visual dos itens já lidos.",
+        metrics(index + 1, index + 1, "O(n)", match ? `Caso observado: ${index + 1} de quatro itens tocados.` : `O custo observado já é ${index + 1} ${index === 0 ? "comparação" : "comparações"}.`),
+        2,
+      ),
+    );
+  });
+
+  steps.push(
     step(
       "search-return",
       "RETURN",
-      [{ type: "RETURN_VALUE", target: "answer", value: 2 }],
-      "A função retorna o índice 2.",
-      "A interface recebe a terceira posição.",
-      "O resultado aponta para o mesmo endereço lido no passo anterior.",
-      metrics(4, 3, "O(n)", "Retornar é O(1); a busca acumulada permanece O(n)."),
+      [{ type: "RETURN_VALUE", target: "answer", value: foundIndex }],
+      foundIndex === -1 ? "A função retorna -1." : `A função retorna o índice ${foundIndex}.`,
+      foundIndex === -1 ? "A interface recebe a resposta “não encontrado”." : `A interface recebe a ${foundIndex + 1}ª posição.`,
+      foundIndex === -1
+        ? "Depois de tocar todos os itens, o algoritmo sinaliza ausência."
+        : "O resultado aponta para o mesmo endereço lido no passo anterior.",
+      metrics(checkedItems.length + 1, checkedItems.length, "O(n)", foundIndex === -1 ? "Nenhum item correspondeu ao alvo; o pior caso percorreu toda a coleção." : "Retornar é O(1); a busca acumulada permanece O(n)."),
       2,
     ),
-  ],
-};
+  );
+
+  return {
+    id: `linear-search-${target}`,
+    scene: {
+      nodes: [
+        node("target", "pill", 248, 52, 144, 44, {
+          abstract: `alvo = ${target}`,
+          practical: `buscar ${practicalTarget}`,
+          memory: `alvo @ 0x080 = ${target}`,
+        }),
+        ...linearSearchItems.map((item, index) =>
+          node(item.id, "block", 77 + index * 128, 174, 104, 64, {
+            abstract: String(item.value),
+            practical: item.practical,
+            memory: item.memory,
+          }),
+        ),
+        node("answer", "tag", 236, 274, 168, 34, {
+          abstract: foundIndex === -1 ? "índice = -1" : "índice = ?",
+          practical: foundIndex === -1 ? "posição = ausente" : "posição = ?",
+          memory: foundIndex === -1 ? "endereço = -1" : "endereço = ?",
+        }),
+      ],
+      edges: [],
+    },
+    code: [
+      "function linearSearch(items, target) {",
+      "  for (let i = 0; i < items.length; i++) {",
+      "    if (items[i] === target) return i;",
+      "  }",
+      "  return -1;",
+      "}",
+    ],
+    steps,
+  };
+}
 
 function createIfTrace(inputs: Record<string, number>): TraceDefinition {
   const age = inputs.age ?? 16;
@@ -791,6 +802,7 @@ export const lessons: LessonDefinition[] = [
     example: { kind: "possible-modeling", label: "Modelagem possível", note: "Uma lista pequena sem índice auxiliar pode ser pesquisada sequencialmente; produtos reais usam estratégias variadas." },
     representations: allRepresentations,
     explanation: { problem: "Encontrar 12 sem conhecer seu índice.", model: "Comparar o alvo com um item por vez, da esquerda para a direita.", cost: "O(1) no melhor caso e O(n) no pior caso; aqui foram três comparações.", whenToUse: "Coleções pequenas, não ordenadas ou buscas ocasionais.", alternative: "Busca binária exige ordenação; hash exige um índice auxiliar." },
+    controls: [{ id: "target", label: "Valor alvo", type: "number", defaultValue: 12, min: 0, max: 20 }],
     challenge: {
       question: "Quando a busca linear atinge o pior caso?",
       hint: "Considere o alvo ausente ou na última posição.",
@@ -821,7 +833,10 @@ export const lessons: LessonDefinition[] = [
         },
       },
     },
-    trace: linearSearchTrace,
+    trace: createLinearSearchTrace({ target: 12 }),
+    createTrace: createLinearSearchTrace,
+    flowScene: createLinearSearchFlowScene(12),
+    createFlowScene: (inputs, representation) => createLinearSearchFlowScene(inputs.target ?? 12, representation),
   },
   {
     id: "condition-if",
@@ -870,6 +885,8 @@ export const lessons: LessonDefinition[] = [
     },
     trace: createIfTrace({ age: 16 }),
     createTrace: createIfTrace,
+    flowScene: createIfFlowScene(16),
+    createFlowScene: (inputs, representation) => createIfFlowScene(inputs.age ?? 16, representation),
   },
   {
     id: "for-loop",
@@ -918,6 +935,8 @@ export const lessons: LessonDefinition[] = [
     },
     trace: createLoopTrace({ limit: 3 }),
     createTrace: createLoopTrace,
+    flowScene: createLoopFlowScene(3),
+    createFlowScene: (inputs, representation) => createLoopFlowScene(inputs.limit ?? 3, representation),
   },
   {
     id: "memory-reference",
@@ -984,4 +1003,15 @@ export function traceForLesson(
   inputs: Record<string, number>,
 ) {
   return lesson.createTrace?.(inputs) ?? lesson.trace;
+}
+
+export function flowSceneForLesson(
+  lesson: LessonDefinition,
+  inputs: Record<string, number>,
+  representation: Representation,
+): FlowSceneDefinition | undefined {
+  const explicitFlowScene = lesson.createFlowScene?.(inputs, representation) ?? lesson.flowScene;
+  if (explicitFlowScene) return explicitFlowScene;
+  const trace = traceForLesson(lesson, inputs);
+  return createGeneratedFlowScene(lesson, trace, representation);
 }
