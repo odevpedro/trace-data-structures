@@ -44,6 +44,12 @@ Concluir uma tarefa não autoriza remover a implementação original. A matriz d
 | PAR-001 | Parcial | Criar baseline visual do protótipo | Comparação manual desktop existe; automatização, temas, drawer e comparações ainda faltam |
 | PAR-002 | Pendente | Formalizar aceite da lição Array | Visual, timeline, motion, quiz/desafio, métricas, acessibilidade e persistência comparados com o original |
 | INT-001 | Pendente | Automatizar integridade do protótipo | Teste falha se a cópia preservada for removida ou alterada sem decisão registrada |
+| VIS-001 | Parcial | Corrigir composição visual do canvas | Pulse e nós linked foram corrigidos; revisão visual manual continua incremental com novos baselines |
+| VIS-002 | Parcial | Eliminar clipping responsivo de cena e código | Canvas e código escalam melhor em compare/mobile; ainda faltam mais estados e dispositivos reais |
+| NAV-001 | Parcial | Restaurar navegação em mobile | Há navegação móvel mínima; fluxo completo e cobertura manual ainda pendem |
+| A11Y-003 | Parcial | Hardening de drawer e regiões roláveis | Drawer desmonta, restaura foco e trava scroll; auditoria manual ainda pendente |
+| STO-004 | Concluído | Normalizar snapshots antigos version 1 | Campos ausentes recebem fallback e a hidratação não quebra ao faltar dismissedAchievementIds |
+| REV-004 | Concluído | Estabilizar cursor da fila de revisão | Revisar card intermediário não quebra a sessão quando a fila vencida encolhe |
 
 ## 3. P1 — Recuperar paridade do protótipo
 
@@ -78,6 +84,7 @@ Para Heap, o bubble-up completo do protótipo é comportamento obrigatório. Par
 | CMP-003 | Array × Fila: remoção no início | Pendente |
 | CMP-004 | Lista × Hash: busca por chave | Pendente |
 | CMP-005 | BFS/Grafo × Dijkstra: menos paradas × menor custo | Pendente |
+| CMP-007 | Concluído | Corrigir sincronização e cobertura das comparações | ComparePage agora usa traces dedicados por cenário com alinhamento semântico e coverage E2E |
 
 Inserção no meio Array × Lista (CMP-001/002) — Concluído.
 
@@ -104,13 +111,13 @@ Qualquer correção direta no HTML preservado precisa atualizar hash, documenta�
 | ENG-003 | Pendente | Cobrir todos os TraceEvent | Cada evento possui semântica, teste e ao menos um cenário real |
 | STO-002 | Pendente | Criar migrações de schema | Snapshot versionado migra sem perder progresso |
 | STO-003 | Pendente | Expor exportar, importar e limpar dados | Usuário controla seus dados locais |
-| REV-002 | Pendente | Filtrar cards vencidos | A sessão respeita dueAt e mostra estado sem cards pendentes |
+| REV-002 | Parcial | Filtrar cards vencidos | A sessão respeita dueAt e o cursor já é estável; ainda faltam empty state mais rico, persistência de fila e cobertura adicional |
 | REV-003 | Pendente | Gerar cards de erro pessoal | Tentativas incorretas alimentam revisão sem duplicação |
 | ACH-002 | Pendente | Catálogo de conquistas | Regras são data-driven, testáveis e ligadas a domínio |
-| ACH-003 | Pendente | Ciclo do aviso de conquista | Aviso aparece uma vez por desbloqueio, aceita dispensa e não bloqueia conteúdo |
-| QA-006 | Pendente | Regressão visual automatizada | Baselines por tema, viewport e reduced motion |
+| ACH-003 | Parcial | Ciclo do aviso de conquista | Aviso aceita dispensa e não prende mais foco/scroll; catálogo e regras adicionais ainda faltam |
+| QA-006 | Concluído | Regressão visual automatizada | Baselines Playwright de landing, drawer, comparação, progresso e backend mobile adicionados |
 | QA-007 | Pendente | Métricas de performance | Bundle, geração do trace e fluidez têm orçamento e medição |
-| A11Y-002 | Pendente | Suíte manual recorrente | Roteiro de leitor de tela, zoom 200%, contraste e touch documentado |
+| A11Y-002 | Parcial | Suíte manual recorrente | Axe cobre landing, player, compare e progresso; revisão manual por screenshots foi feita, mas leitor de tela real e touch ainda faltam |
 | DEP-001 | Pendente | Configurar fallback de rotas na hospedagem | Abrir diretamente /app/lesson/:id funciona em produção |
 
 ## 5. P2 — Expandir a vertical pedagógica
@@ -121,10 +128,14 @@ Qualquer correção direta no HTML preservado precisa atualizar hash, documenta�
 | FLOW-001 | Parcial | Controle de fluxo | if/for existem; else detalhado, switch, while, break, continue, exceções e async faltam |
 | MEM-001 | Parcial | Por baixo dos panos | Referência/frame/heap existem; bits, alocação, GC, recursão, localidade e cache faltam |
 | ALG-001 | Parcial | Algoritmos | Busca linear existe; busca binária, sorts, BFS, DFS e Dijkstra modulares faltam |
+| ALG-002 | Concluído | Fechar Bellman-Ford | Distâncias agora atualizam no canvas e a checagem final de ciclo negativo foi implementada |
 | CODE-001 | Pendente | Exercícios progressivos de código | Completar, ordenar e corrigir código com feedback |
 | CODE-002 | Pendente | Executor JS/TS em Web Worker | Timeout, logs e loops infinitos não bloqueiam a UI |
-| SYS-001 | Parcial | System design | Cliente/API/banco síncrono existe; fila, worker, falhas, retry, idempotência e DLQ faltam |
-| SYS-002 | Pendente | Cenário assíncrono de pedidos | Fluxos normal, indisponível, duplicado e DLQ são manipuláveis |
+| SYS-001 | Parcial | System design | Além do fluxo síncrono, a trilha agora inclui backend request, auth e backend assíncrono |
+| SYS-002 | Concluído | Cenário assíncrono de pedidos | Backend async agora permite trocar entre retry bem-sucedido, request duplicado e falha final com DLQ, com cobertura automatizada |
+| BCK-001 | Concluído | Parte ilustrativa de backend inspirada no roadmap backend | A trilha agora inclui lições atômicas para router, validação, service layer, autenticação, autorização, fila, worker, idempotência, retry e DLQ, além das visões gerais |
+| BCK-002 | Pendente | Cobrir os clusters restantes do roadmap backend | Cada tema ainda não representado por trace próprio — por exemplo cache, balanceamento, rate limiting, paginação, busca, realtime e observabilidade — deve virar lição dedicada |
+| BCK-003 | Parcial | Aprofundamento conceitual da trilha backend | A camada declarativa agora combina `pipeline`, `tree`, `queue` e `graph`: cliente-servidor e cache usam packet flow, `btree` usa árvore real, `backend-dlq` usa mensagem persistente com retry loop e `dijkstra` valida um renderer semântico de grafo ponderado; falta expandir para auth, protocolos, memória e demais tópicos do roadmap |
 | PLAY-001 | Pendente | Playground controlado | Conceito, entrada, operação, velocidade e representação configuráveis sem linguagem universal |
 
 ## 6. P3 — Plataforma ampliada
@@ -142,11 +153,11 @@ Qualquer correção direta no HTML preservado precisa atualizar hash, documenta�
 ## 7. Dívidas e limitações conhecidas
 
 - Array e Lista Encadeada possuem comparação e drawer na nova arquitetura, mas ainda sem revisão visual pixel-perfect contra o protótipo.
-- A UI de revisão agenda cards, porém não usa dueAt para montar a fila.
-- O snapshot valida apenas o número de versão, não todo o formato.
-- O aviso de conquista permanece visível enquanto a conquista estiver desbloqueada.
+- A UI de revisão já filtra vencidos e não quebra com remoção de card, mas ainda não tem fila persistida por sessão nem revisão adaptativa.
+- O snapshot antigo version 1 agora é normalizado, mas ainda não existe migração formal para futuras versões.
+- O aviso de conquista pode ser dispensado, porém o catálogo de conquistas continua mínimo.
 - O sistema de código é somente leitura.
-- O system design atual não simula falhas.
-- Não há testes de regressão visual nem aceite pixel-perfect.
-- A comparação visual manual cobriu screenshots desktop, não todos os temas, viewports ou estados de motion.
+- O system design já cobre fila, worker, retry, idempotência e DLQ em trace, com cenários alternativos manipuláveis; ainda falta um playground mais livre para composições arbitrárias.
+- Há regressão visual automatizada, porém ainda não existe aceite pixel-perfect contra todo o protótipo.
+- A revisão visual manual agora cobre baselines-chave de landing, comparação, progresso e backend mobile; ainda não cobre todos os estados, temas e viewports.
 - A expansão de catálogo não pode transformar lessons.ts em um arquivo único ainda maior.

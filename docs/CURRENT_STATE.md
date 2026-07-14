@@ -1,6 +1,6 @@
 # Trace — Estado atual
 
-Última auditoria: 11 de julho de 2026
+Última auditoria: 14 de julho de 2026
 
 Este documento descreve o que existe no workspace nesta data. Ele separa evidência de código, verificações executadas e comportamentos que ainda dependem de validação em navegador.
 
@@ -18,7 +18,7 @@ O workspace contém duas gerações do Trace:
 1. O protótipo original, preservado como um HTML autocontido.
 2. Uma vertical slice incremental em React, TypeScript e Vite.
 
-A vertical slice prova uma arquitetura comum para 25 lições, quatro representações, uma timeline, persistência local, três flashcards, uma conquista, um módulo de comparação sincronizada (5 presets) e um drawer de limitação. Todas as 20 lições do protótipo e todas as 4 comparações foram migradas; o conteúdo restante (sistema com filas/retry) está no backlog.
+A vertical slice prova uma arquitetura comum para 39 lições, quatro representações, uma timeline, persistência local, três flashcards, uma conquista, um módulo de comparação sincronizada (6 presets) e um drawer de limitação. Todas as 20 lições do protótipo e suas comparações foram migradas; a trilha também ganhou um Scene Player genérico desacoplado de renderers semânticos, com cenas `pipeline`, `tree`, `queue` e `graph`, além de um fallback global que converte traces legados em flow scenes lineares.
 
 O protótipo original continua presente em:
 
@@ -35,12 +35,15 @@ As duas cópias eram byte a byte idênticas no momento desta auditoria, conforme
 - src/main.tsx: montagem React.
 - src/app/App.tsx: shell, rotas, navegação, tema e preferência de movimento.
 - src/app/PersistenceBridge.tsx: hidratação e salvamento do progresso.
-- src/content/lessons.ts: conteúdo das 25 lições e geração de traces.
-- src/content/index.ts: agregador que combina as 25 lições.
+- src/content/lessons.ts: conteúdo base das lições originais e de lógica, além da geração de traces.
+- src/content/generatedFlowScenes.ts: gerador global de cenas lineares para lições sem cena autoral.
+- src/content/index.ts: agregador que combina as 39 lições do learning path.
 - src/content/flashcards.ts: três flashcards.
 - src/core/trace-engine/: tipos, eventos e redução cumulativa da timeline.
+- src/core/flow-scene/: tipos declarativos, ações semânticas e snapshot cumulativo das cenas `pipeline`, `tree`, `queue` e `graph`.
 - src/core/spaced-repetition/: agenda de revisão.
 - src/features/lesson-player/: player, canvas, previsão e desafio.
+- src/features/flow-scene/: scene player, renderers especializados, packet flow, tree pages, queue messages, weighted graphs e painel conceitual detalhado.
 - src/features/timeline/: controles compartilhados.
 - src/features/flashcards/: sessão de revisão.
 - src/features/progress/: aviso de conquista.
@@ -204,7 +207,7 @@ Esses defeitos estão registrados no backlog. Corrigi-los ou aceitá-los exige u
 |---|---|---|
 | / | landing page |
 | /app | redireciona para /app/learn |
-| /app/learn | jornada com 25 lições |
+| /app/learn | jornada com 39 lições |
 | /app/lesson/:lessonId | player genérico |
 | /app/compare/:comparisonId | comparação sincronizada entre duas lições |
 | /app/review | três flashcards |

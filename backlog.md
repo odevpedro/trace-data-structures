@@ -2,11 +2,13 @@
 
 ## Pendentes
 
-- _Nenhum item pendente no momento_
+- `docs/BACKLOG.md` é o backlog canônico e contém as pendências abertas de visual, acessibilidade, comparações, storage e expansão pedagógica.
 
 ## Em andamento
 
-- _Nenhuma_
+- [ ] 2026-07-13 — VIS-001/VIS-002: hardening visual restante por mais estados, temas e devices reais
+- [ ] 2026-07-13 — A11Y-002/A11Y-003: revisão manual restante com leitor de tela real, touch e zoom
+- [ ] 2026-07-13 — SYS-002: expandir controles manipuláveis do backend assíncrono
 
 ## Concluídas
 

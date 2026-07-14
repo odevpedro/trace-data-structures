@@ -69,10 +69,12 @@ Não existe backend, execução remota de código ou dependência de rede no flu
 | src/app | Shell, roteamento e ponte de persistência |
 | src/pages | Landing, jornada, lição, revisão e comparação |
 | src/core/trace-engine | Tipos de domínio e redução determinística de traces |
+| src/core/flow-scene | Tipos declarativos, ações semânticas e redução cumulativa para cenas `pipeline`, `tree`, `queue` e `graph` |
 | src/core/progress | Contrato versionado do snapshot local |
 | src/core/spaced-repetition | Agendamento dos flashcards |
-| src/content | Definições data-driven das sete lições, três cards e comparações |
+| src/content | Definições data-driven das lições, cenas, cards, comparações, gerador global de flow scenes e cenas especializadas |
 | src/features/lesson-player | Player, canvas, previsão e desafio |
+| src/features/flow-scene | Scene player, registry de renderers e primitives visuais para pipeline, árvore, fila e grafo ponderado |
 | src/features/timeline | Controles compartilhados de timeline e velocidade |
 | src/features/flashcards | Sessão curta de revisão |
 | src/features/progress | Apresentação da conquista Primeiro Trace |
@@ -128,7 +130,7 @@ A vertical contém sete lições:
 | array | Estrutura de dados | Inserção intermediária preservada do protótipo |
 | linked-list | Estrutura de dados | Inserção local com relink de ponteiros |
 | linear-search | Algoritmo | Busca, comparações e condição de parada |
-| condition-if | Lógica e controle de fluxo | Entrada manipulável, previsão e branch |
+| condition-if | Lógica e controle de fluxo | Entrada manipulável, previsão, branch e agora cena linear declarativa de decisão |
 | for-loop | Lógica e controle de fluxo | Loop configurável, condição e mutação |
 | memory-reference | Memória | Stack frame, referência, heap e mutação |
 | request-flow | System design | Cliente, API, banco, payload e latência simulada |

@@ -1,0 +1,470 @@
+{
+  "pages": [
+    {
+      "route": "/",
+      "screenshot": "audit/screenshots/pages/landing.png"
+    },
+    {
+      "route": "/app/learn",
+      "screenshot": "audit/screenshots/pages/learning-path.png"
+    },
+    {
+      "route": "/app/review",
+      "screenshot": "audit/screenshots/pages/review.png"
+    },
+    {
+      "route": "/app/progress",
+      "screenshot": "audit/screenshots/pages/progress.png"
+    },
+    {
+      "route": "/prototype/trace_complete_market_v2.html",
+      "screenshot": "audit/screenshots/pages/prototype.png"
+    }
+  ],
+  "compare": [
+    {
+      "route": "/app/compare/insert-middle",
+      "screenshots": [
+        "audit/screenshots/compare/insert-middle-initial.png",
+        "audit/screenshots/compare/insert-middle-mid.png"
+      ]
+    },
+    {
+      "route": "/app/compare/array-queue",
+      "screenshots": [
+        "audit/screenshots/compare/array-queue-initial.png",
+        "audit/screenshots/compare/array-queue-mid.png"
+      ]
+    },
+    {
+      "route": "/app/compare/list-hash",
+      "screenshots": [
+        "audit/screenshots/compare/list-hash-initial.png",
+        "audit/screenshots/compare/list-hash-mid.png"
+      ]
+    },
+    {
+      "route": "/app/compare/bfs-dfs",
+      "screenshots": [
+        "audit/screenshots/compare/bfs-dfs-initial.png",
+        "audit/screenshots/compare/bfs-dfs-mid.png"
+      ]
+    },
+    {
+      "route": "/app/compare/bfs-dijkstra",
+      "screenshots": [
+        "audit/screenshots/compare/bfs-dijkstra-initial.png",
+        "audit/screenshots/compare/bfs-dijkstra-mid.png"
+      ]
+    },
+    {
+      "route": "/app/compare/dijkstra-bellman",
+      "screenshots": [
+        "audit/screenshots/compare/dijkstra-bellman-initial.png",
+        "audit/screenshots/compare/dijkstra-bellman-mid.png"
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "id": "array",
+      "route": "/app/lesson/array",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/array-initial.png",
+        "audit/screenshots/lessons/array-mid.png",
+        "audit/screenshots/lessons/array-final.png"
+      ]
+    },
+    {
+      "id": "linked-list",
+      "route": "/app/lesson/linked-list",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/linked-list-initial.png",
+        "audit/screenshots/lessons/linked-list-mid.png",
+        "audit/screenshots/lessons/linked-list-final.png"
+      ]
+    },
+    {
+      "id": "linear-search",
+      "route": "/app/lesson/linear-search",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/linear-search-initial.png",
+        "audit/screenshots/lessons/linear-search-mid.png",
+        "audit/screenshots/lessons/linear-search-final.png"
+      ]
+    },
+    {
+      "id": "condition-if",
+      "route": "/app/lesson/condition-if",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/condition-if-initial.png",
+        "audit/screenshots/lessons/condition-if-mid.png",
+        "audit/screenshots/lessons/condition-if-final.png"
+      ]
+    },
+    {
+      "id": "for-loop",
+      "route": "/app/lesson/for-loop",
+      "maxStep": 7,
+      "screenshots": [
+        "audit/screenshots/lessons/for-loop-initial.png",
+        "audit/screenshots/lessons/for-loop-mid.png",
+        "audit/screenshots/lessons/for-loop-final.png"
+      ]
+    },
+    {
+      "id": "memory-reference",
+      "route": "/app/lesson/memory-reference",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/memory-reference-initial.png",
+        "audit/screenshots/lessons/memory-reference-mid.png",
+        "audit/screenshots/lessons/memory-reference-final.png"
+      ]
+    },
+    {
+      "id": "request-flow",
+      "route": "/app/lesson/request-flow",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/request-flow-initial.png",
+        "audit/screenshots/lessons/request-flow-mid.png",
+        "audit/screenshots/lessons/request-flow-final.png"
+      ]
+    },
+    {
+      "id": "doubly-linked-list",
+      "route": "/app/lesson/doubly-linked-list",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/doubly-linked-list-initial.png",
+        "audit/screenshots/lessons/doubly-linked-list-mid.png",
+        "audit/screenshots/lessons/doubly-linked-list-final.png"
+      ]
+    },
+    {
+      "id": "stack",
+      "route": "/app/lesson/stack",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/stack-initial.png",
+        "audit/screenshots/lessons/stack-mid.png",
+        "audit/screenshots/lessons/stack-final.png"
+      ]
+    },
+    {
+      "id": "queue",
+      "route": "/app/lesson/queue",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/queue-initial.png",
+        "audit/screenshots/lessons/queue-mid.png",
+        "audit/screenshots/lessons/queue-final.png"
+      ]
+    },
+    {
+      "id": "deque",
+      "route": "/app/lesson/deque",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/deque-initial.png",
+        "audit/screenshots/lessons/deque-mid.png",
+        "audit/screenshots/lessons/deque-final.png"
+      ]
+    },
+    {
+      "id": "hash",
+      "route": "/app/lesson/hash",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/hash-initial.png",
+        "audit/screenshots/lessons/hash-mid.png",
+        "audit/screenshots/lessons/hash-final.png"
+      ]
+    },
+    {
+      "id": "set",
+      "route": "/app/lesson/set",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/set-initial.png",
+        "audit/screenshots/lessons/set-mid.png",
+        "audit/screenshots/lessons/set-final.png"
+      ]
+    },
+    {
+      "id": "bst",
+      "route": "/app/lesson/bst",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/bst-initial.png",
+        "audit/screenshots/lessons/bst-mid.png",
+        "audit/screenshots/lessons/bst-final.png"
+      ]
+    },
+    {
+      "id": "balanced",
+      "route": "/app/lesson/balanced",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/balanced-initial.png",
+        "audit/screenshots/lessons/balanced-mid.png",
+        "audit/screenshots/lessons/balanced-final.png"
+      ]
+    },
+    {
+      "id": "heap",
+      "route": "/app/lesson/heap",
+      "maxStep": 6,
+      "screenshots": [
+        "audit/screenshots/lessons/heap-initial.png",
+        "audit/screenshots/lessons/heap-mid.png",
+        "audit/screenshots/lessons/heap-final.png"
+      ]
+    },
+    {
+      "id": "trie",
+      "route": "/app/lesson/trie",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/trie-initial.png",
+        "audit/screenshots/lessons/trie-mid.png",
+        "audit/screenshots/lessons/trie-final.png"
+      ]
+    },
+    {
+      "id": "graph",
+      "route": "/app/lesson/graph",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/graph-initial.png",
+        "audit/screenshots/lessons/graph-mid.png",
+        "audit/screenshots/lessons/graph-final.png"
+      ]
+    },
+    {
+      "id": "dfs",
+      "route": "/app/lesson/dfs",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/dfs-initial.png",
+        "audit/screenshots/lessons/dfs-mid.png",
+        "audit/screenshots/lessons/dfs-final.png"
+      ]
+    },
+    {
+      "id": "dijkstra",
+      "route": "/app/lesson/dijkstra",
+      "maxStep": 13,
+      "screenshots": [
+        "audit/screenshots/lessons/dijkstra-initial.png",
+        "audit/screenshots/lessons/dijkstra-mid.png",
+        "audit/screenshots/lessons/dijkstra-final.png"
+      ]
+    },
+    {
+      "id": "union-find",
+      "route": "/app/lesson/union-find",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/union-find-initial.png",
+        "audit/screenshots/lessons/union-find-mid.png",
+        "audit/screenshots/lessons/union-find-final.png"
+      ]
+    },
+    {
+      "id": "bellman-ford",
+      "route": "/app/lesson/bellman-ford",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/bellman-ford-initial.png",
+        "audit/screenshots/lessons/bellman-ford-mid.png",
+        "audit/screenshots/lessons/bellman-ford-final.png"
+      ]
+    },
+    {
+      "id": "btree",
+      "route": "/app/lesson/btree",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/btree-initial.png",
+        "audit/screenshots/lessons/btree-mid.png",
+        "audit/screenshots/lessons/btree-final.png"
+      ]
+    },
+    {
+      "id": "lru",
+      "route": "/app/lesson/lru",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/lru-initial.png",
+        "audit/screenshots/lessons/lru-mid.png",
+        "audit/screenshots/lessons/lru-final.png"
+      ]
+    },
+    {
+      "id": "circular",
+      "route": "/app/lesson/circular",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/circular-initial.png",
+        "audit/screenshots/lessons/circular-mid.png",
+        "audit/screenshots/lessons/circular-final.png"
+      ]
+    },
+    {
+      "id": "bloom",
+      "route": "/app/lesson/bloom",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/bloom-initial.png",
+        "audit/screenshots/lessons/bloom-mid.png",
+        "audit/screenshots/lessons/bloom-final.png"
+      ]
+    },
+    {
+      "id": "backend-router",
+      "route": "/app/lesson/backend-router",
+      "maxStep": 9,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-router-initial.png",
+        "audit/screenshots/lessons/backend-router-mid.png",
+        "audit/screenshots/lessons/backend-router-final.png"
+      ]
+    },
+    {
+      "id": "backend-validation",
+      "route": "/app/lesson/backend-validation",
+      "maxStep": 9,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-validation-initial.png",
+        "audit/screenshots/lessons/backend-validation-mid.png",
+        "audit/screenshots/lessons/backend-validation-final.png"
+      ]
+    },
+    {
+      "id": "backend-service-layer",
+      "route": "/app/lesson/backend-service-layer",
+      "maxStep": 9,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-service-layer-initial.png",
+        "audit/screenshots/lessons/backend-service-layer-mid.png",
+        "audit/screenshots/lessons/backend-service-layer-final.png"
+      ]
+    },
+    {
+      "id": "backend-authentication",
+      "route": "/app/lesson/backend-authentication",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-authentication-initial.png",
+        "audit/screenshots/lessons/backend-authentication-mid.png",
+        "audit/screenshots/lessons/backend-authentication-final.png"
+      ]
+    },
+    {
+      "id": "backend-authorization",
+      "route": "/app/lesson/backend-authorization",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-authorization-initial.png",
+        "audit/screenshots/lessons/backend-authorization-mid.png",
+        "audit/screenshots/lessons/backend-authorization-final.png"
+      ]
+    },
+    {
+      "id": "backend-queue",
+      "route": "/app/lesson/backend-queue",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-queue-initial.png",
+        "audit/screenshots/lessons/backend-queue-mid.png",
+        "audit/screenshots/lessons/backend-queue-final.png"
+      ]
+    },
+    {
+      "id": "backend-worker",
+      "route": "/app/lesson/backend-worker",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-worker-initial.png",
+        "audit/screenshots/lessons/backend-worker-mid.png",
+        "audit/screenshots/lessons/backend-worker-final.png"
+      ]
+    },
+    {
+      "id": "backend-idempotency",
+      "route": "/app/lesson/backend-idempotency",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-idempotency-initial.png",
+        "audit/screenshots/lessons/backend-idempotency-mid.png",
+        "audit/screenshots/lessons/backend-idempotency-final.png"
+      ]
+    },
+    {
+      "id": "backend-retry",
+      "route": "/app/lesson/backend-retry",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-retry-initial.png",
+        "audit/screenshots/lessons/backend-retry-mid.png",
+        "audit/screenshots/lessons/backend-retry-final.png"
+      ]
+    },
+    {
+      "id": "backend-dlq",
+      "route": "/app/lesson/backend-dlq",
+      "maxStep": 6,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-dlq-initial.png",
+        "audit/screenshots/lessons/backend-dlq-mid.png",
+        "audit/screenshots/lessons/backend-dlq-final.png"
+      ]
+    },
+    {
+      "id": "backend-request",
+      "route": "/app/lesson/backend-request",
+      "maxStep": 9,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-request-initial.png",
+        "audit/screenshots/lessons/backend-request-mid.png",
+        "audit/screenshots/lessons/backend-request-final.png"
+      ]
+    },
+    {
+      "id": "backend-cache",
+      "route": "/app/lesson/backend-cache",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-cache-initial.png",
+        "audit/screenshots/lessons/backend-cache-mid.png",
+        "audit/screenshots/lessons/backend-cache-final.png"
+      ]
+    },
+    {
+      "id": "backend-auth",
+      "route": "/app/lesson/backend-auth",
+      "maxStep": 4,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-auth-initial.png",
+        "audit/screenshots/lessons/backend-auth-mid.png",
+        "audit/screenshots/lessons/backend-auth-final.png"
+      ]
+    },
+    {
+      "id": "backend-async",
+      "route": "/app/lesson/backend-async",
+      "maxStep": 5,
+      "screenshots": [
+        "audit/screenshots/lessons/backend-async-initial.png",
+        "audit/screenshots/lessons/backend-async-mid.png",
+        "audit/screenshots/lessons/backend-async-final.png"
+      ]
+    }
+  ]
+}

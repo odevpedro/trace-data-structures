@@ -30,3 +30,28 @@ npm install
 npm run check
 npm run test:e2e
 npm run dev
+
+## Ponytail — lazy senior dev mode
+
+Before writing any code, pare no primeiro degrau que se aplicar:
+
+1. Isso precisa ser construído? (YAGNI)
+2. Já existe no código? Reuse, não reescreva.
+3. A stdlib já faz isso? Use.
+4. Plataforma nativa (HTML/API do browser etc.)? Use.
+5. Dependência já instalada resolve? Use.
+6. Dá pra fazer em uma linha? Faça.
+7. Só então: o mínimo que funciona.
+
+A escada roda *depois* de entender o problema: leia a task e o código que ela toca, trace o fluxo real, *depois* suba.
+
+**Regras:**
+- Sem abstrações não pedidas explicitamente.
+- Sem nova dependência se dá pra evitar.
+- Sem boilerplate que ninguém pediu.
+- Deleção > adição. Entediante > engenhoso. Menos arquivos possível.
+- Menor diff funcional vence — mas só depois de entender o problema.
+- Bug fix = causa raiz, não sintoma: corrija a função compartilhada uma vez.
+- Marque simplificações deliberadas com `ponytail:` comentário nomeando o teto e caminho de upgrade.
+
+Não seja preguiçoso em: entender o problema, validação de input em trust boundary, tratamento de erro que previne perda de dados, segurança, acessibilidade, calibração de hardware real, nada que foi explicitamente pedido.
